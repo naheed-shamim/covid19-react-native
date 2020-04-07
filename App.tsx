@@ -1,11 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, SafeAreaView } from 'react-native';
+import HomeScreen from './src/components/HomeScreen';
+import VisualTheme, { Theme } from './src/common/VisualTheme';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
+    <SafeAreaView style={VisualTheme.droidSafeArea}>
+      {/* <Text>Open up App.tsx to start working on your app!</Text> */}
+      <HomeScreen />
+    </SafeAreaView>
   );
 }
 
