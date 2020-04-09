@@ -1,8 +1,12 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from '@react-navigation/stack';
 import HomeScreen from '../components/HomeScreen';
 import StateWiseList from '../components/StateWiseList';
+import { Theme } from '../common/VisualTheme';
 
 const Screens = {
   HOME: 'Home',
@@ -16,10 +20,14 @@ const RootNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={Screens.HOME}
-        headerMode='screen'
+        headerMode='float'
+        // mode='modal'
         screenOptions={{
-          headerTintColor: 'black',
-          headerStyle: { backgroundColor: 'white' },
+          headerTintColor: 'white',
+          headerStyle: { backgroundColor: '#75a3a3' },
+          ...TransitionPresets.ScaleFromCenterAndroid,
+          // gestureEnabled: true,
+          // gestureDirection: 'horizontal',
         }}
       >
         <Stack.Screen

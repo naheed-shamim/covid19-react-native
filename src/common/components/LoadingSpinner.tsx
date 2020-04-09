@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
-export default class LoadingSpinner extends Component {
+interface Props {
+  isVisible: boolean;
+}
+export default class LoadingSpinner extends Component<Props> {
   render() {
     if (this.props.isVisible) {
       return (
