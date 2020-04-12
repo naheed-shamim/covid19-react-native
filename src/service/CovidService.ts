@@ -21,6 +21,22 @@ export const CovidService = {
             throw error;
         }
     },
+    getStateDistrictStats: async (loader: Function) => {
+        const { path, methodType } = CovidApi.STATE_WISE();
+        const request = Requests.requestBuilder(methodType, BASE_URL, path);
+        loader && loader(true);
+        try {
+            const response = await request;
+            // console.log('====================================');
+            // console.log(response);
+            // console.log('====================================');
+            loader && loader(false);
+            return response.data;
+        } catch (error) {
+            loader && loader(false);
+            throw error;
+        }
+    },
 
 };
 
