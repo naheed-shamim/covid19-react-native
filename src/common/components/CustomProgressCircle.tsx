@@ -2,7 +2,12 @@ import React from 'react';
 import ProgressCircle from 'react-native-progress-circle';
 import { View, Text } from 'react-native';
 
-export const CustomProgressCircle = (props) => {
+interface Props {
+  percent: number;
+  descriptionLabel: string;
+  color: string;
+}
+export const CustomProgressCircle = (props: Props) => {
   const { percent, descriptionLabel, color } = props;
   const percentage = percent.toFixed(2);
   return (
@@ -15,7 +20,7 @@ export const CustomProgressCircle = (props) => {
         shadowColor='#999'
         bgColor='#fff'
       >
-        {percentage > 0 && (
+        {percentage.length > 0 && (
           <Text
             style={{ fontSize: 26, fontWeight: 'bold' }}
           >{`${percentage}%`}</Text>

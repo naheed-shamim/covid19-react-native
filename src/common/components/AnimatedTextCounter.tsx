@@ -1,16 +1,50 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { Text } from 'react-native';
 
-export default class AnimatedTextCounter {
-    
-  state = { pleaseDisplayMe: 0 };
-
+interface Props {
+  fromValue: Number;
+  toValue: Number;
+}
+interface State {
+  counter: number;
+  started: boolean;
+}
+export default class AnimatedTextCounter extends React.Component<Props, State> {
+  interval: number;
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      counter: 0,
+      started: false,
+    };
+    this.interval = null;
+  }
   componentDidMount() {
-    setInterval(() => {
-      this.setState({ pleaseDisplayMe: this.state.pleaseDisplayMe + 1 });
-    }, 1000);
+    this.setState({ started: !this.state.started }, () =>
+      this._handleCounterIncrement()
+    );
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
+  _handleCounterIncrement = () => {
+    if (this.state.started) {
+      this.interval = setInterval(() => {
+        if (this.state.counter < this.props.toValue) {
+          this.setState({
+            counter: this.state.counter + 50,
+          });
+        } else {
+          this.setState({ started: !this.state.started });
+        }
+      }, 1);
+    } else {
+      clearInterval(this.interval);
+    }
+  };
+
   render() {
-    return <Text>{this.state.pleaseDisplayMe}</Text>;
+    return <Text>{this.state.counter}</Text>;
   }
 }

@@ -8,6 +8,11 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeScreen from '../components/HomeScreen';
 import StateWiseList from '../components/StateWiseList';
 import { Theme } from '../common/VisualTheme';
+import { Image } from 'react-native';
+import { icons } from '../constants/Constants';
+
+// /Volumes/DATA/Personal/Expo/covid-19-india/assets/expand-more@1x.png
+// /Volumes/DATA/Personal/Expo/covid-19-india/src/navigation/RootNavigator.tsx
 
 const Screens = {
   HOME: 'Home',
@@ -17,11 +22,16 @@ const Screens = {
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const StackNavigator = () => {
+const myHeader = (onPress, label, labelStyle) => (
+  <Image source={icons.expandMore} />
+);
+
+const RootStackNavigator = () => {
   return (
     <Stack.Navigator
       initialRouteName={Screens.HOME}
       headerMode='float'
+      headerLeft={myHeader}
       // mode='modal'
       screenOptions={{
         headerTintColor: 'white',
@@ -49,10 +59,17 @@ const StackNavigator = () => {
   );
 };
 
-const DrawerNavigator = () => {
+const RootDrawerNavigator = () => {
   return (
-    <Drawer.Navigator initialRouteName={Screens.HOME}>
-      <Drawer.Screen name={Screens.HOME} component={HomeScreen} />
+    <Drawer.Navigator
+      initialRouteName={Screens.HOME}
+      drawerType='slide'
+      drawerStyle={{
+        backgroundColor: '#c6cbef',
+        width: 240,
+      }}
+    >
+      <Drawer.Screen name={Screens.HOME} component={RootStackNavigator} />
       <Drawer.Screen name={Screens.STATE_DATA} component={StateWiseList} />
     </Drawer.Navigator>
   );
@@ -61,12 +78,7 @@ const DrawerNavigator = () => {
 const RootNavigator = () => {
   return (
     <NavigationContainer>
-      
-        <StackNavigator />
-      {/* </DrawerNavigator> */}
-
-      {/* </DrawerNavigator> */}
-      {/* <DrawerNavigator /> */}
+      <RootDrawerNavigator />
     </NavigationContainer>
   );
 };

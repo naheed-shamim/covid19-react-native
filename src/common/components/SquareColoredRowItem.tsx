@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import AnimatedTextCounter from './AnimatedTextCounter';
 
 export const SquareColoredRowItem = (props) => {
   const { label, value, color } = props;
@@ -16,7 +17,7 @@ export const SquareColoredRowItem = (props) => {
         padding: 10,
         height: 100,
         width: 100,
-        justifyContent: 'center'
+        justifyContent: 'center',
       }}
     >
       <View
@@ -27,16 +28,9 @@ export const SquareColoredRowItem = (props) => {
         }}
       >
         <Text>{label.toUpperCase()}</Text>
+        {/* <AnimatedTextCounter fromValue={0} toValue={value} /> */}
         <Text style={{ fontSize: 25, fontWeight: 'bold' }}>{value}</Text>
       </View>
     </View>
   );
-
-  {
-    /* // return (
-    //     <View style= {{ flex: 1 }>
-    //         <Text>{ 'this is Test'} < /Text>
-    //         < /View>
-    //     ) */
-  }
 };

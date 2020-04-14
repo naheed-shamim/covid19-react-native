@@ -2,45 +2,45 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { CovidService } from '../service/CovidService';
 import WithLoadingSpinner from '../common/hoc/WithLoadingSpinner';
-import { SquareColoredRowItem } from '../common/components/SquareColoredRowItem';
 import { CustomProgressCircle } from '../common/components/CustomProgressCircle';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Theme } from '../common/VisualTheme';
 import { OverallData } from '../common/components/OverallData';
 import { formatDateAbsolute, formatDate } from '../utils/CommonUtils';
+import { strings } from '../constants/Strings';
+import { Theme } from '../common/VisualTheme';
 
 class HomeScreen extends Component {
   state = {
-    genericData: {},
-    stateData: [],
-    districtData: {},
+    totalCases: {},
+    stateWiseData: [],
+    stateDistrictWiseData: {},
   };
   componentDidMount() {
-    this._fetchGenericData();
+    this._fetchDataFromAPI();
   }
-  _fetchGenericData = async () => {
+
+  _fetchDataFromAPI = async () => {
     const { statewise } = await CovidService.getGenericStats(
       this.props.withLoader
     );
-    const generalStats = statewise[0];
-    const stateData = statewise.slice(1);
-    const districtData = await CovidService.getStateDistrictStats(
+    const stateDistrictWiseData = await CovidService.getStateDistrictStats(
       this.props.withLoader
     );
-    this.setState({ genericData: generalStats, stateData, districtData });
-  };
 
-  _generateGenericData = (covidData: Array<Object>): Array<Object> => {
-    if (covidData == null || covidData.length == 0) return [];
-    else {
-      return covidData;
-    }
+    const totalCases = statewise[0]; //1st array elements is total Cases
+    const stateWiseData = statewise.slice(1); //Rest array elements contain state-wise Data
+
+    this.setState({
+      totalCases: totalCases,
+      stateWiseData,
+      stateDistrictWiseData,
+    });
   };
 
   _getPercentageStats = () => {
-    const { genericData } = this.state;
-    if (genericData) {
-      const { confirmed, deaths, recovered } = genericData;
+    const { totalCases } = this.state;
+    if (totalCases) {
+      const { confirmed, deaths, recovered } = totalCases;
       const confirmedValue = parseInt(confirmed);
       const deathsValue = parseFloat(deaths);
       const recoveredValue = parseFloat(recovered);
@@ -52,19 +52,20 @@ class HomeScreen extends Component {
   };
 
   _getLastUpdatedTime = () => {
+    const { lastupdatedtime } = this.state.totalCases;
     let lastUpdatedTime = '';
-    if (this.state.genericData.lastupdatedtime) {
-      lastUpdatedTime = isNaN(
-        Date.parse(formatDate(this.state.genericData.lastupdatedtime))
-      )
+    if (lastupdatedtime) {
+      lastUpdatedTime = isNaN(Date.parse(formatDate(lastupdatedtime)))
         ? ''
-        : formatDateAbsolute(this.state.genericData.lastupdatedtime);
+        : formatDateAbsolute(lastupdatedtime);
     }
     return lastUpdatedTime;
   };
 
   render() {
-    const totalCases = this._generateGenericData(this.state.genericData);
+    const {
+      totalCases = { active: 0, confirmed: 0, deaths: 0, recovered: 0 },
+    } = this.state;
     const lastUpdatedTime = this._getLastUpdatedTime();
 
     const {
@@ -102,6 +103,9 @@ class HomeScreen extends Component {
             <View style={{ alignSelf: 'center' }}>
               <Text>{`Total Confirmed cases: ${totalCases.confirmed}`}</Text>
               <Text>{`Last updated time: ${lastUpdatedTime}`}</Text>
+              <TouchableOpacity onPress={() => this._fetchDataFromAPI()}>
+                <Text>{strings.refreshData}</Text>
+              </TouchableOpacity>
             </View>
           </View>
           {/* </View> */}
@@ -127,21 +131,22 @@ class HomeScreen extends Component {
             style={{
               margin: 5,
               padding: 5,
-              backgroundColor: 'tomato',
+              backgroundColor: 'white',
               borderRadius: 3,
-              // flex: 1,π
+              borderWidth: 2,
+              borderColor: Theme.PRIMARY_ACCENT,
             }}
             onPress={() =>
               this.props.navigation.navigate('StateData', {
-                stateData: this.state.stateData,
-                districtData: this.state.districtData,
+                stateWiseData: this.state.stateWiseData,
+                stateDistrictWiseData: this.state.stateDistrictWiseData,
               })
             }
           >
             <Text
               style={{
                 alignSelf: 'center',
-                color: 'white',
+                color: Theme.PRIMARY_ACCENT,
                 fontSize: 20,
                 fontWeight: 'bold',
                 margin: 10,
