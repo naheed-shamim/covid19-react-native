@@ -1,15 +1,17 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import HomeScreen from './src/components/HomeScreen';
+import { Provider } from 'react-redux';
 import VisualTheme, { Theme } from './src/common/VisualTheme';
 import RootNavigator from './src/navigation/RootNavigator';
+import { ReduxStore } from './src/redux/ReduxStore';
 
 export default function App() {
   return (
-    <SafeAreaView style={VisualTheme.droidSafeArea}>
-      <RootNavigator />
+    <Provider store={ReduxStore}>
+      <SafeAreaView style={VisualTheme.droidSafeArea}>
+        <RootNavigator />
     </SafeAreaView>
+    </Provider>
   );
 }
 

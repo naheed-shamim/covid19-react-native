@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
 
 import { strings } from '../constants/Strings';
 import { CovidService } from '../service/CovidService';
 import WithLoadingSpinner from '../common/hoc/WithLoadingSpinner';
 import { CustomLineChart } from '../common/components/Charts';
+import { getOverallStatsAndTimeline } from '../redux/actions/CovidIndiaActions';
+import BaseComponent from './BaseComponent';
 
-class TimelineSeries extends Component {
+class TimelineSeries extends BaseComponent {
   constructor(props) {
     super(props);
   }
-  state = { timeLineSeries: [] };
+  // state = { timeLineSeries: [] };
 
   componentDidMount() {
-    this._fetchTimeLine();
+    // this._fetchTimeLine();
+    this.props.getOverallStatsAndTimeline();
   }
 
   _fetchTimeLine = async () => {
@@ -23,9 +27,7 @@ class TimelineSeries extends Component {
     this.setState({ timeLineSeries: cases_time_series });
   };
 
-  render() {
-    const { timeLineSeries = [] } = this.state;
-
+  _renderTables = (timeLineSeries) => {
     let confirmedLabelArray: any[] = [];
     let confirmedArray: any[] = [];
     let deathsLabelArray: any[] = [];
@@ -42,7 +44,7 @@ class TimelineSeries extends Component {
       timeLineSeries.map((item, index) => {
         // index % dateInterval == 0 &&
         confirmedLabelArray.push(item.date);
-        confirmedArray.push(item.totalconfirmed);
+        confirmedArray.push(item.dailyconfirmed);
 
         deathsLabelArray.push(item.date);
         deathsArray.push(item.totaldeceased);
@@ -64,7 +66,6 @@ class TimelineSeries extends Component {
       xAxisLabels: recoveredLabelArray,
       yAxisData: recoveredArray,
     };
-
     return (
       <ScrollView>
         <View style={styles.container}>
@@ -73,17 +74,27 @@ class TimelineSeries extends Component {
             dataSet={confirmedDataSet}
             onDataSelected={(x, y) => console.log(x, y)}
           />
-          <CustomLineChart
+          {/* <CustomLineChart
             title={'Total Death Cases'}
             dataSet={deathsDataSet}
           />
           <CustomLineChart
             title={'Total Recovered Cases'}
             dataSet={recoveredDataSet}
-          />
+          /> */}
         </View>
       </ScrollView>
     );
+  };
+
+  render() {
+    const { loading, timeLineSeries = [] } = this.props;
+
+    const renderView = loading
+      ? this._renderLoader(loading)
+      : this._renderTables(timeLineSeries);
+
+    return <View>{renderView}</View>;
     // );
   }
 }
@@ -109,4 +120,16 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WithLoadingSpinner()(TimelineSeries);
+const mapStateToProps = (state: any) => {
+  return {
+    loading: state.covidIndia.loading,
+    timeLineSeries: state.covidIndia.timeLineSeries,
+  };
+};
+const mapDispatchToProps = {
+  getOverallStatsAndTimeline,
+};
+export default WithLoadingSpinner()(
+  connect(mapStateToProps, mapDispatchToProps)(TimelineSeries)
+);
+//WithLoadingSpinner()(TimelineSeries);

@@ -4,20 +4,16 @@ import { COVID_API_BASE_URL } from './ApiConstants';
 
 const BASE_URL = COVID_API_BASE_URL;
 export const CovidService = {
-    // Fetch by data
-    getGenericStats: async (loader: Function) => {
+    getGenericStats: async () => {
         const { path, methodType } = CovidApi.All_DATA();
-        const request = Requests.requestBuilder(methodType, BASE_URL, path);
-        loader && loader(true);
+        return await Requests.requestBuilder(methodType, BASE_URL, path);
+        // loader && loader(true);
         try {
-            const response = await request;
-            // console.log('====================================');
-            // console.log(response);
-            // console.log('====================================');
-            loader && loader(false);
-            return response.data;
+            const response = request;
+            // loader && loader(false);
+
         } catch (error) {
-            loader && loader(false);
+            // loader && loader(false);
             throw error;
         }
     },
@@ -27,9 +23,6 @@ export const CovidService = {
         loader && loader(true);
         try {
             const response = await request;
-            // console.log('====================================');
-            // console.log(response);
-            // console.log('====================================');
             loader && loader(false);
             return response.data;
         } catch (error) {

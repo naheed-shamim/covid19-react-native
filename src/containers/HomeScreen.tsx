@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  Button,
+} from 'react-native';
 import { CovidService } from '../service/CovidService';
 import WithLoadingSpinner from '../common/hoc/WithLoadingSpinner';
 import { CustomProgressCircle } from '../common/components/CustomProgressCircle';
@@ -8,14 +15,19 @@ import { OverallData } from '../common/components/OverallData';
 import { formatDateAbsolute, formatDate } from '../utils/CommonUtils';
 import { strings } from '../constants/Strings';
 import { Theme } from '../common/VisualTheme';
+import BaseComponent from './BaseComponent';
 
-class HomeScreen extends Component {
+class HomeScreen extends BaseComponent {
   state = {
     totalCases: {},
     stateWiseData: [],
     stateDistrictWiseData: {},
   };
   componentDidMount() {
+    // const { navigation } = this.props;
+    // navigation.setOptions({
+    //   headerRight: () => <Button title='Save' />,
+    // });
     this._fetchDataFromAPI();
   }
 

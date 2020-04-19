@@ -5,11 +5,12 @@ import LoadingSpinner from '../common/components/LoadingSpinner';
 import WithLoadingSpinner from '../common/hoc/WithLoadingSpinner';
 import { CollapsibleRowItem } from '../common/components/CollapsibleRowItem';
 import { CovidService } from '../service/CovidService';
+import BaseComponent from './BaseComponent';
 
 // const StateDistrictData = (generic, district = {}) => {
 //   return { generic, district };
 // };
-class StateWiseList extends Component {
+class StateWiseList extends BaseComponent {
   constructor(props: any) {
     super(props);
   }

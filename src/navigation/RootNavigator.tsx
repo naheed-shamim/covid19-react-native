@@ -5,14 +5,12 @@ import {
   TransitionPresets,
 } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import HomeScreen from '../components/HomeScreen';
-import StateWiseList from '../components/StateWiseList';
+import HomeScreen from '../containers/HomeScreen';
+import StateWiseList from '../containers/StateWiseList';
 import { Theme } from '../common/VisualTheme';
-import { Image } from 'react-native';
+import { Image, Button } from 'react-native';
 import { icons } from '../constants/Constants';
-
-// /Volumes/DATA/Personal/Expo/covid-19-india/assets/expand-more@1x.png
-// /Volumes/DATA/Personal/Expo/covid-19-india/src/navigation/RootNavigator.tsx
+import TimelineSeries from '../containers/TimelineSeries';
 
 const Screens = {
   HOME: 'Home',
@@ -22,17 +20,11 @@ const Screens = {
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const myHeader = (onPress, label, labelStyle) => (
-  <Image source={icons.expandMore} />
-);
-
 const RootStackNavigator = () => {
   return (
     <Stack.Navigator
       initialRouteName={Screens.HOME}
       headerMode='float'
-      headerLeft={myHeader}
-      // mode='modal'
       screenOptions={{
         headerTintColor: 'white',
         headerStyle: { backgroundColor: '#75a3a3' },
@@ -43,7 +35,7 @@ const RootStackNavigator = () => {
     >
       <Stack.Screen
         name={Screens.HOME}
-        component={HomeScreen}
+        component={TimelineSeries}
         options={{
           title: 'COVID-19 Tracker',
         }}
@@ -63,7 +55,6 @@ const RootDrawerNavigator = () => {
   return (
     <Drawer.Navigator
       initialRouteName={Screens.HOME}
-      drawerType='slide'
       drawerStyle={{
         backgroundColor: '#c6cbef',
         width: 240,
@@ -84,38 +75,3 @@ const RootNavigator = () => {
 };
 
 export default RootNavigator;
-// function MyStack() {
-//     return (
-//         <Stack.Navigator
-//       initialRouteName= "Home"
-//     headerMode = "screen"
-//     screenOptions = {{
-//         headerTintColor: 'white',
-//             headerStyle: { backgroundColor: 'tomato' },
-//     }
-// }
-//     >
-//     <Stack.Screen
-//         name="Home"
-// component = { Home }
-// options = {{
-//     title: 'Awesome app',
-//         }}
-// />
-//     < Stack.Screen
-// name = "Profile"
-// component = { Profile }
-// options = {{
-//     title: 'My profile',
-//         }}
-// />
-//     < Stack.Screen
-// name = "Settings"
-// component = { Settings }
-// options = {{
-//     gestureEnabled: false,
-//         }}
-// />
-//     < /Stack.Navigator>
-//   );
-// }
