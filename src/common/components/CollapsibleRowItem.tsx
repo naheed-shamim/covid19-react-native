@@ -3,7 +3,6 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { HorizontalRowItem } from './HorizontalRowItem';
 import { strings } from '../../constants/Strings';
 import { Colors } from '../VisualTheme';
-
 interface CollapsibleRowItemProps {
   overallStateData: any;
   districtDetails: any;

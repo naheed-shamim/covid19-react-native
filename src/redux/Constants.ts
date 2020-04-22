@@ -4,6 +4,7 @@ export const actionTypes = {
     OVERALL_DATA_LOADED: 'overallDataLoaded',
     DATA_LOADING: 'dataLoading',
     GET_STATE_DISTRICT_STATS: 'getStateDistrictStats',
+    STATE_DISTRICT_DATA_LOADED: 'stateDistrictDataLoaded',
     GET_STATE_DISTRICT_STATS_V2: 'getStateDistrictStats_v2',
 
     TOTAL_CASES: 'totalCases',

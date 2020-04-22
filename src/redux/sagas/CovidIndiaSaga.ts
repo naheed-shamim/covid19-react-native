@@ -32,8 +32,9 @@ export function* getOverallStatsAndTimeline() {
 export function* getStateDistrictData() {
 
     try {
-        const response = yield CovidService.getGenericStats_v2();
-        yield put({ type: actionTypes.STATE_DISTRICT_DATA, payload: response })
+        yield put({ type: actionTypes.DATA_LOADING })
+        const response = yield CovidService.getStateDistrictStats();
+        yield put({ type: actionTypes.STATE_DISTRICT_DATA_LOADED, payload: response.data })
     }
     catch (error) {
         //TODO: handle error

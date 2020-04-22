@@ -7,50 +7,37 @@ import {
   ScrollView,
   Button,
 } from 'react-native';
+import { connect } from 'react-redux';
 import { CovidService } from '../service/CovidService';
 import WithLoadingSpinner from '../common/hoc/WithLoadingSpinner';
 import { CustomProgressCircle } from '../common/components/CustomProgressCircle';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { OverallData } from '../common/components/OverallData';
+import { ThemedOverallData } from '../common/components/OverallData';
 import { formatDateAbsolute, formatDate } from '../utils/CommonUtils';
 import { strings } from '../constants/Strings';
 import { Theme } from '../common/VisualTheme';
 import BaseComponent from './BaseComponent';
+import {
+  getOverallStatsAndTimeline,
+  getStateDistrictStats,
+} from '../redux/actions/CovidIndiaActions';
 
+interface Props {
+  totalCases: {};
+}
 class HomeScreen extends BaseComponent {
-  state = {
-    totalCases: {},
-    stateWiseData: [],
-    stateDistrictWiseData: {},
-  };
+  // props: any;
   componentDidMount() {
-    // const { navigation } = this.props;
-    // navigation.setOptions({
-    //   headerRight: () => <Button title='Save' />,
-    // });
     this._fetchDataFromAPI();
   }
 
   _fetchDataFromAPI = async () => {
-    const { statewise } = await CovidService.getGenericStats(
-      this.props.withLoader
-    );
-    const stateDistrictWiseData = await CovidService.getStateDistrictStats(
-      this.props.withLoader
-    );
-
-    const totalCases = statewise[0]; //1st array elements is total Cases
-    const stateWiseData = statewise.slice(1); //Rest array elements contain state-wise Data
-
-    this.setState({
-      totalCases: totalCases,
-      stateWiseData,
-      stateDistrictWiseData,
-    });
+    this.props.getStateDistrictStats();
+    this.props.getOverallStatsAndTimeline();
   };
 
   _getPercentageStats = () => {
-    const { totalCases } = this.state;
+    const { totalCases = {} } = this.props;
     if (totalCases) {
       const { confirmed, deaths, recovered } = totalCases;
       const confirmedValue = parseInt(confirmed);
@@ -64,9 +51,11 @@ class HomeScreen extends BaseComponent {
   };
 
   _getLastUpdatedTime = () => {
-    const { lastupdatedtime } = this.state.totalCases;
+    const { totalCases = {} } = this.props;
+    const { lastupdatedtime = '' } = totalCases;
     let lastUpdatedTime = '';
-    if (lastupdatedtime) {
+
+    if (!!lastupdatedtime) {
       lastUpdatedTime = isNaN(Date.parse(formatDate(lastupdatedtime)))
         ? ''
         : formatDateAbsolute(lastupdatedtime);
@@ -75,18 +64,14 @@ class HomeScreen extends BaseComponent {
   };
 
   render() {
-    const {
-      totalCases = { active: 0, confirmed: 0, deaths: 0, recovered: 0 },
-    } = this.state;
+    const { totalCases = {} } = this.props;
+    const { active = 0, confirmed = 0, deaths = 0, recovered = 0 } = totalCases;
     const lastUpdatedTime = this._getLastUpdatedTime();
 
-    const {
-      deathPercentage = 0,
-      recoveryPercentage,
-    } = this._getPercentageStats();
+    const { deathPercentage, recoveryPercentage } = this._getPercentageStats();
 
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{ flex: 1 }}>
         <ScrollView>
           {/* Render the Generic Data */}
           <View style={{ borderWidth: 1, borderColor: 'grey', margin: 5 }}>
@@ -96,24 +81,24 @@ class HomeScreen extends BaseComponent {
                 justifyContent: 'space-evenly',
               }}
             >
-              <OverallData
+              <ThemedOverallData
                 label='Active'
-                value={totalCases.active}
+                value={active}
                 textColor='red'
               />
-              <OverallData
+              <ThemedOverallData
                 label='Deaths'
-                value={totalCases.deaths}
+                value={deaths}
                 textColor='grey'
               />
-              <OverallData
+              <ThemedOverallData
                 label='Recovered'
-                value={totalCases.recovered}
+                value={recovered}
                 textColor='green'
               />
             </View>
             <View style={{ alignSelf: 'center' }}>
-              <Text>{`Total Confirmed cases: ${totalCases.confirmed}`}</Text>
+              <Text>{`Total Confirmed cases: ${confirmed}`}</Text>
               <Text>{`Last updated time: ${lastUpdatedTime}`}</Text>
               <TouchableOpacity onPress={() => this._fetchDataFromAPI()}>
                 <Text>{strings.refreshData}</Text>
@@ -148,12 +133,7 @@ class HomeScreen extends BaseComponent {
               borderWidth: 2,
               borderColor: Theme.PRIMARY_ACCENT,
             }}
-            onPress={() =>
-              this.props.navigation.navigate('StateData', {
-                stateWiseData: this.state.stateWiseData,
-                stateDistrictWiseData: this.state.stateDistrictWiseData,
-              })
-            }
+            onPress={() => this.props.navigation.navigate('StateData')}
           >
             <Text
               style={{
@@ -173,6 +153,19 @@ class HomeScreen extends BaseComponent {
   }
 }
 
-const styles = StyleSheet.create({});
+const mapStateToProps = (state: any) => {
+  return {
+    totalCases: state.covidIndia.totalCases,
+    stateWise: state.covidIndia.statewise,
+    stateDistrictWiseData: state.covidIndia.stateDistrictWiseData,
+  };
+};
 
-export default WithLoadingSpinner()(HomeScreen);
+const mapDispatchToProps = {
+  getOverallStatsAndTimeline,
+  getStateDistrictStats,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+
+const styles = StyleSheet.create({});

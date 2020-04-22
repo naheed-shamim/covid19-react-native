@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, Animated, StyleSheet, Easing } from 'react-native';
+import { toCommas } from '../../utils/CommonUtils';
 const expandIcon = require('../../../assets/expand-more.png');
 
 interface Props {
@@ -14,18 +15,16 @@ export const HorizontalRowItem = (props: Props) => {
   const rotationDegree = selected && confirmed > 0 ? '90deg' : '0deg';
 
   return (
-    // <View style={styles.stateContainer}>
     <View style={styles.stateContainer}>
       <Image
         source={expandIcon}
         style={{ transform: [{ rotate: rotationDegree }] }}
       />
       <Text style={styles.stateNameTxt}>{state}</Text>
-      <Text style={styles.stateNumbersTxt}>{active}</Text>
-      <Text style={styles.stateNumbersTxt}>{deaths}</Text>
-      <Text style={styles.stateNumbersTxt}>{recovered}</Text>
+      <Text style={styles.stateNumbersTxt}>{toCommas(active)}</Text>
+      <Text style={styles.stateNumbersTxt}>{toCommas(deaths)}</Text>
+      <Text style={styles.stateNumbersTxt}>{toCommas(recovered)}</Text>
     </View>
-    // </View>
   );
 };
 

@@ -1,15 +1,14 @@
 import React, { Component, PureComponent } from 'react';
 import { FlatList, View, InteractionManager, Text } from 'react-native';
+import { connect } from 'react-redux';
 import { HorizontalRowItem } from '../common/components/HorizontalRowItem';
 import LoadingSpinner from '../common/components/LoadingSpinner';
 import WithLoadingSpinner from '../common/hoc/WithLoadingSpinner';
 import { CollapsibleRowItem } from '../common/components/CollapsibleRowItem';
 import { CovidService } from '../service/CovidService';
 import BaseComponent from './BaseComponent';
+import { getStateDistrictStats } from '../redux/actions/CovidIndiaActions';
 
-// const StateDistrictData = (generic, district = {}) => {
-//   return { generic, district };
-// };
 class StateWiseList extends BaseComponent {
   constructor(props: any) {
     super(props);
@@ -23,16 +22,13 @@ class StateWiseList extends BaseComponent {
   }
 
   _renderFlatList = () => {
-    const {
-      stateWiseData = [],
-      stateDistrictWiseData = {},
-    } = this.props.route.params;
+    const { statewise = [], stateDistrictWiseData = {} } = this.props;
     const showHeaders = this._renderHeader();
     return (
       <View style={{ flex: 1 }}>
         {showHeaders}
         <FlatList
-          data={stateWiseData}
+          data={statewise}
           renderItem={({ item, index }) => (
             <CollapsibleRowItem
               overallStateData={item}
@@ -85,14 +81,12 @@ class StateWiseList extends BaseComponent {
   };
 
   render() {
-    // const { stateWiseData } = this.props;
     const showHeaders = this._renderHeader();
 
     const showStateData = this.state.didFinishAnimating
       ? this._renderFlatList()
       : this._renderBlankView();
 
-    // const stateWiseData = [];
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         {/* {showHeaders} */}
@@ -102,4 +96,16 @@ class StateWiseList extends BaseComponent {
   }
 }
 
-export default WithLoadingSpinner()(StateWiseList);
+const mapStateToProps = (state: any) => {
+  return {
+    stateDistrictWiseData: state.covidIndia.stateDistrictWiseData,
+    statewise: state.covidIndia.statewise,
+  };
+};
+
+const mapDispatchToProps = {
+  getStateDistrictStats,
+};
+
+// export default connect(mapStateToProps, mapDispatchToProps)(StateWiseList);
+export default connect(mapStateToProps, mapDispatchToProps)(StateWiseList);

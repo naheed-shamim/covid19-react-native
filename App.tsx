@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, View } from 'react-native';
+import { Provider as PaperProvider } from 'react-native-paper';
 import { Provider } from 'react-redux';
 import VisualTheme, { Theme } from './src/common/VisualTheme';
 import RootNavigator from './src/navigation/RootNavigator';
@@ -10,7 +11,7 @@ export default function App() {
     <Provider store={ReduxStore}>
       <SafeAreaView style={VisualTheme.droidSafeArea}>
         <RootNavigator />
-    </SafeAreaView>
+      </SafeAreaView>
     </Provider>
   );
 }

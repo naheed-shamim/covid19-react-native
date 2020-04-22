@@ -6,6 +6,7 @@ import { strings } from '../constants/Strings';
 import { CovidService } from '../service/CovidService';
 import WithLoadingSpinner from '../common/hoc/WithLoadingSpinner';
 import { CustomLineChart } from '../common/components/Charts';
+import LoadingSpinner from '../common/components/LoadingSpinner';
 import { getOverallStatsAndTimeline } from '../redux/actions/CovidIndiaActions';
 import BaseComponent from './BaseComponent';
 
@@ -87,6 +88,10 @@ class TimelineSeries extends BaseComponent {
     );
   };
 
+  _renderLoader = (loading) => {
+    return <LoadingSpinner isVisible={loading} />;
+  };
+
   render() {
     const { loading, timeLineSeries = [] } = this.props;
 
@@ -94,8 +99,7 @@ class TimelineSeries extends BaseComponent {
       ? this._renderLoader(loading)
       : this._renderTables(timeLineSeries);
 
-    return <View>{renderView}</View>;
-    // );
+    return <View style={{ flex: 1 }}>{renderView}</View>;
   }
 }
 
