@@ -12,7 +12,7 @@ import { CovidService } from '../service/CovidService';
 import WithLoadingSpinner from '../common/hoc/WithLoadingSpinner';
 import { CustomProgressCircle } from '../common/components/CustomProgressCircle';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { ThemedOverallData } from '../common/components/OverallData';
+import { OverallData } from '../common/components/OverallData';
 import { formatDateAbsolute, formatDate } from '../utils/CommonUtils';
 import { strings } from '../constants/Strings';
 import { Theme } from '../common/VisualTheme';
@@ -81,17 +81,17 @@ class HomeScreen extends BaseComponent {
                 justifyContent: 'space-evenly',
               }}
             >
-              <ThemedOverallData
+              <OverallData
                 label='Active'
                 value={active}
                 textColor='red'
               />
-              <ThemedOverallData
+              <OverallData
                 label='Deaths'
                 value={deaths}
                 textColor='grey'
               />
-              <ThemedOverallData
+              <OverallData
                 label='Recovered'
                 value={recovered}
                 textColor='green'
