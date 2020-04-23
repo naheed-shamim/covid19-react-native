@@ -48,10 +48,10 @@ class TimelineSeries extends BaseComponent {
         confirmedArray.push(item.dailyconfirmed);
 
         deathsLabelArray.push(item.date);
-        deathsArray.push(item.totaldeceased);
+        deathsArray.push(item.dailydeceased);
 
         recoveredLabelArray.push(item.date);
-        recoveredArray.push(item.totalrecovered);
+        recoveredArray.push(item.dailyrecovered);
       });
     }
     const confirmedDataSet = {
@@ -71,18 +71,25 @@ class TimelineSeries extends BaseComponent {
       <ScrollView>
         <View style={styles.container}>
           <CustomLineChart
+            cumulative={false}
+            color={'red'}
             title={'Total Confirmed Cases'}
             dataSet={confirmedDataSet}
-            onDataSelected={(x, y) => console.log(x, y)}
+            // onDataSelected={(x, y) => console.log(x, y)
+            // }
           />
-          {/* <CustomLineChart
+          <CustomLineChart
+            cumulative={false}
+            color={'grey'}
             title={'Total Death Cases'}
             dataSet={deathsDataSet}
           />
           <CustomLineChart
+            cumulative={false}
+            color={'green'}
             title={'Total Recovered Cases'}
             dataSet={recoveredDataSet}
-          /> */}
+          />
         </View>
       </ScrollView>
     );
@@ -136,4 +143,3 @@ const mapDispatchToProps = {
 export default WithLoadingSpinner()(
   connect(mapStateToProps, mapDispatchToProps)(TimelineSeries)
 );
-//WithLoadingSpinner()(TimelineSeries);
