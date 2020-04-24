@@ -1,5 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions, Switch } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Switch,
+  InteractionManager,
+} from 'react-native';
+import { Card, Button } from 'react-native-paper';
+// import { Button } from 'react-native-paper';
 
 import {
   LineChart,
@@ -9,6 +18,13 @@ import {
   ContributionGraph,
   StackedBarChart,
 } from 'react-native-chart-kit';
+import LoadingSpinner from './LoadingSpinner';
+
+enum TYPE {
+  WEEK = 0,
+  MONTH = 1,
+  ALL = 2,
+}
 
 interface Props {
   title: string;
@@ -20,23 +36,26 @@ interface Props {
   };
 }
 
-const getCumulativeArrayFor = (array) => {
-  // let array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  let cumulativeArray = array.map((elem, index) =>
-    array.slice(0, index + 1).reduce((a, b) => parseInt(a) + parseInt(b))
-  );
-  return cumulativeArray;
-};
+//TODO: Clear on change values total cases
+//TODO: add per month etc
 
 export class CustomLineChart extends React.PureComponent<Props> {
   state = {
     valueSelected: '',
     daySelected: '',
     isCumulative: this.props.cumulative,
+    chartSpan: TYPE.MONTH,
+    didFinishAnimating: false,
   };
 
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ didFinishAnimating: true });
+    });
+  }
+
   toggleSwitch = () => {
-    this.setState({ isCumulative: !this.state.isCumulative });
+    this.setState({ isCumulative: !this.state.isCumulative, daySelected: '' });
   };
 
   chartConfig = (primaryColor: string) => ({
@@ -57,21 +76,58 @@ export class CustomLineChart extends React.PureComponent<Props> {
     },
   });
 
+  _renderToggleButton = () => {
+    return (
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Button
+          onPress={() =>
+            this.setState({ chartSpan: TYPE.ALL, daySelected: '' })
+          }
+        >
+          Total
+        </Button>
+        <Button
+          onPress={() =>
+            this.setState({ chartSpan: TYPE.WEEK, daySelected: '' })
+          }
+        >
+          Last 7 Days
+        </Button>
+        <Button
+          onPress={() =>
+            this.setState({ chartSpan: TYPE.MONTH, daySelected: '' })
+          }
+        >
+          Last Month
+        </Button>
+      </View>
+    );
+  };
+
+  // _renderChartView = (xAxisArray, yAxisArray) => {
+  //   return()
+  // }
+
   render() {
-    let yAxisValues: Array<number> = [];
     const { dataSet, onDataSelected, title, color } = this.props;
+    const { isCumulative, didFinishAnimating } = this.state;
     const { xAxisLabels = [], yAxisData = [] } = dataSet;
 
-    yAxisValues = yAxisData;
-    if (this.state.isCumulative) {
-      yAxisValues = getCumulativeArrayFor(yAxisData);
-    }
-    //TODO: Clear on change values total cases
+    const xAggregated = xAxisLabels;
+    const yAggregated = getCumulativeArrayFor(yAxisData, isCumulative);
 
-    const hasData = xAxisLabels.length > 0 || yAxisData.length > 0;
-    return (
-      <View style={styles.container}>
-        <Text>{title}</Text>
+    const { filteredXArray, filteredYArray } = getDayFilteredValues(
+      this.state.chartSpan,
+      yAggregated,
+      xAggregated
+    );
+
+    const showButtons = this._renderToggleButton();
+
+    const hasData = filteredXArray.length > 0 || filteredXArray.length > 0;
+    return didFinishAnimating ? (
+      <Card style={{ marginTop: 10, marginBottom: 10 }}>
+        <Card.Title title={title} />
         <View
           style={{
             flexDirection: 'row',
@@ -91,10 +147,10 @@ export class CustomLineChart extends React.PureComponent<Props> {
         {hasData && (
           <LineChart
             data={{
-              labels: xAxisLabels,
+              labels: filteredXArray,
               datasets: [
                 {
-                  data: yAxisValues,
+                  data: filteredYArray,
                   strokeWidth: 1, // optional
                 },
               ],
@@ -111,21 +167,24 @@ export class CustomLineChart extends React.PureComponent<Props> {
             verticalLabelRotation={90}
             formatXLabel={(item) => item.substr(0, 6)}
             onDataPointClick={({ value, index, x, y }) => {
-              //   onDataSelected(xAxisLabels[index], yAxisData[index]),
               this.setState({
-                daySelected: xAxisLabels[index],
-                valueSelected: yAxisValues[index],
+                daySelected: filteredXArray[index],
+                valueSelected: filteredYArray[index],
               });
             }}
             withVerticalLabels={false}
           />
         )}
-        {this.state.daySelected.length > 0 && (
-          <View style={{ alignSelf: 'center' }}>
+
+        {!!this.state.daySelected && (
+          <View style={{ alignSelf: 'center', paddingBottom: 10 }}>
             <Text>{`${this.state.valueSelected} ${title} on ${this.state.daySelected}`}</Text>
           </View>
         )}
-      </View>
+        {showButtons}
+      </Card>
+    ) : (
+      <LoadingSpinner isVisible />
     );
   }
 }
@@ -135,3 +194,33 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+/* ---- MOVE TO UTILITY */
+
+const getCumulativeArrayFor = (array, isCumulative: boolean) => {
+  if (isCumulative) {
+    const cumulativeArray = array.map((elem, index) =>
+      array.slice(0, index + 1).reduce((a, b) => parseInt(a) + parseInt(b))
+    );
+    return cumulativeArray;
+  } else return array;
+};
+
+const getDayFilteredValues = (chartSpan: number, yAxisArray, xAxisArray) => {
+  let filteredYArray = yAxisArray;
+  let filteredXArray = xAxisArray;
+  switch (chartSpan) {
+    case TYPE.MONTH:
+      filteredYArray = yAxisArray.slice(-30);
+      filteredXArray = xAxisArray.slice(-30);
+      break;
+    case TYPE.WEEK:
+      filteredYArray = yAxisArray.slice(-7);
+      filteredXArray = xAxisArray.slice(-7);
+      break;
+    case TYPE.MONTH:
+      filteredYArray = yAxisArray;
+      filteredXArray = xAxisArray;
+  }
+  return { filteredXArray, filteredYArray };
+};

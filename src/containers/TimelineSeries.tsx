@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 
-import { strings } from '../constants/Strings';
-import { CovidService } from '../service/CovidService';
 import WithLoadingSpinner from '../common/hoc/WithLoadingSpinner';
 import { CustomLineChart } from '../common/components/Charts';
 import LoadingSpinner from '../common/components/LoadingSpinner';
@@ -14,19 +12,11 @@ class TimelineSeries extends BaseComponent {
   constructor(props) {
     super(props);
   }
-  // state = { timeLineSeries: [] };
 
   componentDidMount() {
-    // this._fetchTimeLine();
     this.props.getOverallStatsAndTimeline();
   }
 
-  _fetchTimeLine = async () => {
-    const { cases_time_series } = await CovidService.getGenericStats(
-      this.props.withLoader
-    );
-    this.setState({ timeLineSeries: cases_time_series });
-  };
 
   _renderTables = (timeLineSeries) => {
     let confirmedLabelArray: any[] = [];
