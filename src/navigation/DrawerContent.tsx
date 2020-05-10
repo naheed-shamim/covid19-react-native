@@ -13,7 +13,7 @@ import {
   Switch,
 } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Screens } from './RootNavigator';
+import { Screens } from './Constants';
 
 export function DrawerContent(props) {
   return (

@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, ScrollView } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 
 import WithLoadingSpinner from '../common/hoc/WithLoadingSpinner';
@@ -7,6 +7,7 @@ import { CustomLineChart } from '../common/components/Charts';
 import LoadingSpinner from '../common/components/LoadingSpinner';
 import { getOverallStatsAndTimeline } from '../redux/actions/CovidIndiaActions';
 import BaseComponent from './BaseComponent';
+import { getWorldSummary } from '../redux/actions/CovidWorldActions';
 
 class TimelineSeries extends BaseComponent {
   constructor(props) {
@@ -15,8 +16,8 @@ class TimelineSeries extends BaseComponent {
 
   componentDidMount() {
     this.props.getOverallStatsAndTimeline();
+    this.props.getWorldSummary();
   }
-
 
   _renderTables = (timeLineSeries) => {
     let confirmedLabelArray: any[] = [];
@@ -64,21 +65,9 @@ class TimelineSeries extends BaseComponent {
             cumulative={false}
             color={'red'}
             title={'Total Confirmed Cases'}
-            dataSet={confirmedDataSet}
+            dataSet={[confirmedDataSet, recoveredDataSet, deathsDataSet]}
             // onDataSelected={(x, y) => console.log(x, y)
             // }
-          />
-          <CustomLineChart
-            cumulative={false}
-            color={'grey'}
-            title={'Total Death Cases'}
-            dataSet={deathsDataSet}
-          />
-          <CustomLineChart
-            cumulative={false}
-            color={'green'}
-            title={'Total Recovered Cases'}
-            dataSet={recoveredDataSet}
           />
         </View>
       </ScrollView>
@@ -90,7 +79,8 @@ class TimelineSeries extends BaseComponent {
   };
 
   render() {
-    const { loading, timeLineSeries = [] } = this.props;
+    const { loading, timeLineSeries = [], global } = this.props;
+    !!global && console.log(global);
 
     const renderView = loading
       ? this._renderLoader(loading)
@@ -103,7 +93,6 @@ class TimelineSeries extends BaseComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     padding: 10,
   },
 
@@ -125,10 +114,12 @@ const mapStateToProps = (state: any) => {
   return {
     loading: state.covidIndia.loading,
     timeLineSeries: state.covidIndia.timeLineSeries,
+    global: state.covidWorld.global,
   };
 };
 const mapDispatchToProps = {
   getOverallStatsAndTimeline,
+  getWorldSummary,
 };
 export default WithLoadingSpinner()(
   connect(mapStateToProps, mapDispatchToProps)(TimelineSeries)

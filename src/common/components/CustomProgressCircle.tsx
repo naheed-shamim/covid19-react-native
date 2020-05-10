@@ -4,31 +4,35 @@ import { View, Text } from 'react-native';
 
 interface Props {
   percent: number;
-  descriptionLabel: string;
+  descriptionLabel?: string;
   color: string;
 }
 export const CustomProgressCircle = (props: Props) => {
   const { percent, descriptionLabel, color } = props;
   const percentage = percent.toFixed(2);
   return (
-    <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+    <View
+      style={{ flexDirection: 'column', alignItems: 'center', margin: '15%' }}
+    >
       <ProgressCircle
         percent={parseInt(percentage)}
-        radius={70}
-        borderWidth={10}
+        radius={50}
+        borderWidth={15}
         color={color}
-        shadowColor='#999'
+        shadowColor='#899'
         bgColor='#fff'
       >
         {percentage.length > 0 && (
           <Text
-            style={{ fontSize: 26, fontWeight: 'bold' }}
+            style={{ fontSize: 16, fontWeight: '500' }}
           >{`${percentage}%`}</Text>
         )}
       </ProgressCircle>
-      <Text style={{ fontSize: 16, fontWeight: 'bold', paddingTop: 10 }}>
-        {descriptionLabel.toUpperCase()}
-      </Text>
+      {descriptionLabel && (
+        <Text style={{ fontSize: 14, fontWeight: 'bold', paddingTop: 10 }}>
+          {descriptionLabel.toUpperCase()}
+        </Text>
+      )}
     </View>
   );
 };

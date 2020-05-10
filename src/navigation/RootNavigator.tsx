@@ -1,31 +1,42 @@
 import React from 'react';
+import { Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   createStackNavigator,
   TransitionPresets,
 } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../containers/HomeScreen';
+import CountriesList from '../containers/CountriesList';
 import StateWiseList from '../containers/StateWiseList';
-// import { Theme } from '../common/VisualTheme';
-// import { icons } from '../constants/Constants';
 import TimelineSeries from '../containers/TimelineSeries';
 import { DrawerContent } from './DrawerContent';
 import { StackHeader } from './StackHeader';
-
-export const Screens = {
-  HOME_STACK: 'HomeStack',
-  TIMELINE_STACK: 'TimelineStack',
-  HOME: 'Home',
-  STATE_DATA: 'StateData',
-  TIME_LINE_SERIES: 'TimelineSeries',
-};
+import { Screens } from './Constants';
+import CustomTabBar from './components/CustomTabBar';
+import IndiaScreen from '../containers/IndiaScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
+const iconMap = {
+  home: '♡',
+  search: '♢',
+  favorites: '♧',
+  profile: '♤',
+};
+
+const RootTabNavigator = () => {
+  return (
+    <Tab.Navigator initialRouteName='World' backBehavior='none'>
+      <Tab.Screen name='World' component={HomeStackNavigator} />
+      <Tab.Screen name='Home' component={IndiaStackNavigator} />
+    </Tab.Navigator>
+  );
+};
 /* Stack */
-
 const HomeStackNavigator = () => {
   return (
     <Stack.Navigator
@@ -52,7 +63,6 @@ const HomeStackNavigator = () => {
         options={{
           headerTitle: 'COVID-19 Tracker',
         }}
-        // options={{ headerTitle: 'Twitter' }}
       />
       <Stack.Screen
         name={Screens.STATE_DATA}
@@ -61,11 +71,18 @@ const HomeStackNavigator = () => {
           title: 'State Data',
         }}
       />
+      <Stack.Screen
+        name={Screens.COUNTRY_DATA}
+        component={CountriesList}
+        options={{
+          title: 'Country Data',
+        }}
+      />
     </Stack.Navigator>
   );
 };
 
-const TimeLineStackNavigator = () => {
+const IndiaStackNavigator = () => {
   return (
     <Stack.Navigator
       initialRouteName={Screens.TIME_LINE_SERIES}
@@ -84,10 +101,17 @@ const TimeLineStackNavigator = () => {
       }}
     >
       <Stack.Screen
-        name={Screens.TIME_LINE_SERIES}
-        component={TimelineSeries}
+        name={Screens.INDIA}
+        component={IndiaScreen}
         options={{
           headerTitle: 'Covid India TimeLine',
+        }}
+      />
+      <Stack.Screen
+        name={Screens.STATE_DATA}
+        component={StateWiseList}
+        options={{
+          title: 'State Data',
         }}
       />
     </Stack.Navigator>
@@ -110,10 +134,10 @@ const RootDrawerNavigator = () => {
       }}
       drawerContent={(navigation) => <DrawerContent {...navigation} />}
     >
-      <Drawer.Screen name={Screens.HOME_STACK} component={HomeStackNavigator} />
+      <Drawer.Screen name={Screens.HOME_STACK} component={RootTabNavigator} />
       <Drawer.Screen
         name={Screens.TIMELINE_STACK}
-        component={TimeLineStackNavigator}
+        component={IndiaStackNavigator}
       />
     </Drawer.Navigator>
   );

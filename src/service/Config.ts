@@ -1,6 +1,6 @@
 import { HttpMethods } from "./ApiConstants";
 
-export const CovidApi = {
+export const CovidIndiaApi = {
     All_DATA: () => {
         return {
             path: `/data.json`,
@@ -14,3 +14,18 @@ export const CovidApi = {
         };
     },
 };
+
+export const CovidWorldApi = {
+    SUMMARY: () => {
+        return {
+            path: `/summary`,
+            methodType: HttpMethods.GET,
+        };
+    },
+    COUNTRIES: () => {
+        return {
+            path: `/countries`,
+            methodType: HttpMethods.GET,
+        };
+    }
+}

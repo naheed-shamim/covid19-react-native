@@ -1,36 +1,46 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import AnimatedTextCounter from './AnimatedTextCounter';
+import { toCommas } from '../../utils/CommonUtils';
+import { Card } from 'react-native-paper';
 
 export const SquareColoredRowItem = (props) => {
-  const { label, value, color } = props;
+  const {
+    title = '',
+    value = '',
+    secondaryValue,
+    textColor = 'black',
+    bgColor,
+  } = props;
 
   return (
-    <View
-      style={{
-        flex: 1,
-        borderRadius: 2,
-        borderWidth: 2,
-        borderBottomWidth: 10,
-        borderColor: color,
-        margin: 10,
-        padding: 10,
-        height: 100,
-        width: 100,
-        justifyContent: 'center',
-      }}
+    <Card
+      elevation={3}
+      style={{ margin: 10, padding: 10, height: 150, width: 150 }}
     >
       <View
         style={{
-          alignItems: 'center',
+          flex: 1,
+          borderRadius: 20,
+          backgroundColor: 'white',
+
           justifyContent: 'center',
-          alignSelf: 'center',
         }}
       >
-        <Text>{label.toUpperCase()}</Text>
-        {/* <AnimatedTextCounter fromValue={0} toValue={value} /> */}
-        <Text style={{ fontSize: 25, fontWeight: 'bold' }}>{value}</Text>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            alignSelf: 'center',
+          }}
+        >
+          <Text>{title.toUpperCase()}</Text>
+          {/* <AnimatedTextCounter fromValue={0} toValue={value} /> */}
+          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+            {toCommas(value)}
+          </Text>
+        </View>
       </View>
-    </View>
+    </Card>
   );
 };

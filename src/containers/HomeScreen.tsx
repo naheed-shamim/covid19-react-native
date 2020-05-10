@@ -3,30 +3,36 @@ import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
   ScrollView,
-  Button,
+  TouchableOpacity,
 } from 'react-native';
+import { Card } from 'react-native-paper';
 import { connect } from 'react-redux';
-import { CovidService } from '../service/CovidService';
-import WithLoadingSpinner from '../common/hoc/WithLoadingSpinner';
 import { CustomProgressCircle } from '../common/components/CustomProgressCircle';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { OverallData } from '../common/components/OverallData';
-import { formatDateAbsolute, formatDate } from '../utils/CommonUtils';
+import { AntDesign } from '@expo/vector-icons';
+import { toCommas, getPercentage } from '../utils/CommonUtils';
 import { strings } from '../constants/Strings';
 import { Theme } from '../common/VisualTheme';
-import BaseComponent from './BaseComponent';
+
+import TimeAgo from 'react-native-timeago';
+
 import {
   getOverallStatsAndTimeline,
   getStateDistrictStats,
 } from '../redux/actions/CovidIndiaActions';
+import { getWorldSummary } from '../redux/actions/CovidWorldActions';
+import { getTotalIndiaCasesArray } from '../utils/AppUtils';
+import { SquareColoredRowItem } from '../common/components/SquareColoredRowItem';
+import {
+  MemoizedLastUpdatedTime,
+  MemoizedTotalAndNewCases,
+} from '../common/components/CommonElements';
 
 interface Props {
   totalCases: {};
+  global: {};
 }
-class HomeScreen extends BaseComponent {
-  // props: any;
+class HomeScreen extends Component<Props> {
   componentDidMount() {
     this._fetchDataFromAPI();
   }
@@ -34,119 +40,98 @@ class HomeScreen extends BaseComponent {
   _fetchDataFromAPI = async () => {
     this.props.getStateDistrictStats();
     this.props.getOverallStatsAndTimeline();
+    this.props.getWorldSummary();
   };
 
   _getPercentageStats = () => {
-    const { totalCases = {} } = this.props;
-    if (totalCases) {
-      const { confirmed, deaths, recovered } = totalCases;
-      const confirmedValue = parseInt(confirmed);
-      const deathsValue = parseFloat(deaths);
-      const recoveredValue = parseFloat(recovered);
-      let deathPercentage = (deathsValue / confirmedValue) * 100;
-      let recoveryPercentage = (recoveredValue / confirmedValue) * 100;
+    const { global = {} } = this.props;
 
-      return { deathPercentage, recoveryPercentage };
-    } else return { deathPercentage: 0, recoveryPercentage: 0 };
+    const { TotalConfirmed, TotalDeaths, TotalRecovered } = global;
+    const deathPercentage = getPercentage(TotalDeaths, TotalConfirmed);
+    const recoveryPercentage = getPercentage(TotalRecovered, TotalConfirmed);
+
+    return {
+      deathPercentage,
+      recoveryPercentage,
+    };
   };
 
-  _getLastUpdatedTime = () => {
-    const { totalCases = {} } = this.props;
-    const { lastupdatedtime = '' } = totalCases;
-    let lastUpdatedTime = '';
+  _renderGlobalStatsCards = () => {
+    const {
+      TotalConfirmed = '',
+      NewConfirmed = '',
+      TotalDeaths = '',
+      NewDeaths = '',
+      TotalRecovered = '',
+      NewRecovered = '',
+    } = this.props.global;
+    const { deathPercentage, recoveryPercentage } = this._getPercentageStats();
+    return (
+      <View>
+        <Card elevation={3} style={styles.horizontalCardStyle}>
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              padding: 10,
+            }}
+          >
+            <Text style={styles.statsLabelStyle}>{'Total Confirmed'}</Text>
+            <MemoizedTotalAndNewCases
+              totalCases={TotalConfirmed}
+              newCases={NewConfirmed}
+              color='red'
+            />
+            <AntDesign name='right' size={10} color='black' />
+          </TouchableOpacity>
+        </Card>
 
-    if (!!lastupdatedtime) {
-      lastUpdatedTime = isNaN(Date.parse(formatDate(lastupdatedtime)))
-        ? ''
-        : formatDateAbsolute(lastupdatedtime);
-    }
-    return lastUpdatedTime;
+        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+          <Card elevation={3} style={styles.squareCardStyle}>
+            <View style={styles.squareCardContainerStyle}>
+              <Text style={[styles.statsLabelStyle]}>{'Total Deaths'}</Text>
+              <CustomProgressCircle percent={deathPercentage} color={'red'} />
+              <MemoizedTotalAndNewCases
+                totalCases={TotalDeaths}
+                newCases={NewDeaths}
+                color='grey'
+              />
+            </View>
+          </Card>
+          <Card elevation={3} style={styles.squareCardStyle}>
+            <View style={styles.squareCardContainerStyle}>
+              <Text style={styles.statsLabelStyle}>{'Total Recovered'}</Text>
+              <CustomProgressCircle
+                percent={recoveryPercentage}
+                color={'green'}
+              />
+              <MemoizedTotalAndNewCases
+                totalCases={TotalRecovered}
+                newCases={NewRecovered}
+                color='green'
+              />
+            </View>
+          </Card>
+        </View>
+      </View>
+    );
   };
 
   render() {
-    const { totalCases = {} } = this.props;
-    const { active = 0, confirmed = 0, deaths = 0, recovered = 0 } = totalCases;
-    const lastUpdatedTime = this._getLastUpdatedTime();
-
-    const { deathPercentage, recoveryPercentage } = this._getPercentageStats();
+    const { globalLastUpdateTime } = this.props;
+    console.log(globalLastUpdateTime);
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.mainContainer}>
         <ScrollView>
-          {/* Render the Generic Data */}
-          <View style={{ borderWidth: 1, borderColor: 'grey', margin: 5 }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-evenly',
-              }}
-            >
-              <OverallData
-                label='Active'
-                value={active}
-                textColor='red'
-              />
-              <OverallData
-                label='Deaths'
-                value={deaths}
-                textColor='grey'
-              />
-              <OverallData
-                label='Recovered'
-                value={recovered}
-                textColor='green'
-              />
-            </View>
-            <View style={{ alignSelf: 'center' }}>
-              <Text>{`Total Confirmed cases: ${confirmed}`}</Text>
-              <Text>{`Last updated time: ${lastUpdatedTime}`}</Text>
-              <TouchableOpacity onPress={() => this._fetchDataFromAPI()}>
-                <Text>{strings.refreshData}</Text>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.dummyHeader}>
+            <Text style={styles.titleText}>{'World Covid Data'}</Text>
           </View>
-          {/* </View> */}
-          <View
-            style={{
-              margin: 20,
-              justifyContent: 'space-around',
-              flexDirection: 'row',
-            }}
-          >
-            <CustomProgressCircle
-              percent={recoveryPercentage}
-              descriptionLabel='Recovery Rates'
-              color={'green'}
-            />
-            <CustomProgressCircle
-              percent={deathPercentage}
-              descriptionLabel='Death Rates'
-              color={'red'}
-            />
+          <View style={styles.statsContainer}>
+            {this._renderGlobalStatsCards()}
+            <MemoizedLastUpdatedTime lastUpdatedTime={globalLastUpdateTime} />
           </View>
-          <TouchableOpacity
-            style={{
-              margin: 5,
-              padding: 5,
-              backgroundColor: 'white',
-              borderRadius: 3,
-              borderWidth: 2,
-              borderColor: Theme.PRIMARY_ACCENT,
-            }}
-            onPress={() => this.props.navigation.navigate('StateData')}
-          >
-            <Text
-              style={{
-                alignSelf: 'center',
-                color: Theme.PRIMARY_ACCENT,
-                fontSize: 20,
-                fontWeight: 'bold',
-                margin: 10,
-              }}
-            >
-              {'Check State Data'}
-            </Text>
-          </TouchableOpacity>
         </ScrollView>
       </View>
     );
@@ -158,14 +143,49 @@ const mapStateToProps = (state: any) => {
     totalCases: state.covidIndia.totalCases,
     stateWise: state.covidIndia.statewise,
     stateDistrictWiseData: state.covidIndia.stateDistrictWiseData,
+    global: state.covidWorld.global,
+    globalLastUpdateTime: state.covidWorld.globalLastUpdateTime,
   };
 };
 
 const mapDispatchToProps = {
   getOverallStatsAndTimeline,
   getStateDistrictStats,
+  getWorldSummary,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+const blueHeaderHeight = 55;
+const styles = StyleSheet.create({
+  mainContainer: { flex: 1, backgroundColor: 'white' },
+  dummyHeader: {
+    aspectRatio: 3,
+    backgroundColor: 'blue',
+    justifyContent: 'center',
+  },
+  titleText: {
+    fontSize: 20,
+    color: 'white',
+    fontWeight: 'bold',
+    marginHorizontal: '5%',
+  },
+  statsContainer: {
+    width: '100%',
+    height: `${blueHeaderHeight}%`,
+    marginTop: '-15%',
+  },
+  horizontalCardStyle: {
+    margin: '5%',
+    padding: '5%',
+  },
+  squareCardStyle: {
+    flex: 1,
+    margin: '2%',
+    padding: '2%',
+    justifyContent: 'center',
+  },
+  squareCardContainerStyle: { alignItems: 'center', padding: '10%' },
+  statsValueStyle: { fontSize: 25, fontWeight: '600' },
+  statsLabelStyle: { fontSize: 15 },
+});
 
-const styles = StyleSheet.create({});
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
