@@ -37,6 +37,7 @@ interface Props {
   cumulative: boolean;
   color: string;
   dataSet: [];
+}
   
 
 //TODO: Clear on change values total cases

@@ -3,7 +3,7 @@ import { actionTypes } from "../Constants";
 const initialState = {
 
     loading: false,
-
+    allData: null,
     totalCases: {},
     statewise: [],
     timeLineSeries: [],
@@ -21,7 +21,6 @@ const reducer = (state = initialState, action) => {
                 totalCases: action.payload.statewise[0],
                 statewise: action.payload.statewise.slice(1),
                 timeLineSeries: action.payload.cases_time_series,
-                loading: false
             };
         }
         case actionTypes.STATE_DISTRICT_DATA_LOADED:

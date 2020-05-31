@@ -4,9 +4,9 @@ import { COVID_INDIA_BASE_URL } from './ApiConstants';
 
 const BASE_URL = COVID_INDIA_BASE_URL;
 export const CovidIndiaService = {
-    getGenericStats: async () => {
+    getGenericStats: () => {
         const { path, methodType } = CovidIndiaApi.All_DATA();
-        return await Requests.requestBuilder(methodType, BASE_URL, path);
+        return Requests.requestBuilder(methodType, BASE_URL, path);
     },
     getStateDistrictStats: async () => {
         const { path, methodType } = CovidIndiaApi.STATE_WISE();

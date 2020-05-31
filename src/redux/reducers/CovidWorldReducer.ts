@@ -1,12 +1,10 @@
 import { actionTypes } from "../Constants";
 
 const initialState = {
-
     loading: false,
-
-    global: {},
-    globalLastUpdateTime: '',
-    countries: [],
+    summary: null,
+    // globalLastUpdateTime: '',
+    // countries: [],
 }
 
 const reducer = (state = initialState, action) => {
@@ -16,9 +14,9 @@ const reducer = (state = initialState, action) => {
         case actionTypes.WORLD_SUMMARY_LOADED: {
             return {
                 ...state,
-                global: action.payload.Global,
-                globalLastUpdateTime: action.payload.Date,
-                countries: action.payload.Countries,
+                summary: action.payload,
+                // globalLastUpdateTime: action.payload.Date,
+                // countries: action.payload.Countries,
                 loading: false
             };
         }

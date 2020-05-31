@@ -60,12 +60,13 @@ export const toCommas = (value: string): string => {
   n2 = n1[1] || null;
   n1 = n1[0].replace(/(\d)(?=(\d\d)+\d$)/g, "$1,");
   value = n2 ? n1 + '.' + n2 : n1;
-  console.log("Input:", input)
-  console.log("Output:", value)
   return value;
 
 }
- 
+export const isObjectEmpty = (obj) =>
+  Object.keys(obj).length === 0 && obj.constructor === Object
+
+
 
 // export const formatDate = (unformattedDate) => {
 //   const day = unformattedDate.slice(0, 2);
@@ -74,3 +75,107 @@ export const toCommas = (value: string): string => {
 //   const time = unformattedDate.slice(11);
 //   return `${year}-${month}-${day}T${time}+05:30`;
 // };
+
+
+/**
+ *
+ * @param {*} array | Pass the Array to sort
+ * @param {*} comparatorField | Pass the property of the object to be compared
+ * @param {*} isAscending | Ascending sort, by default
+ */
+export const sortArrayBy = (array: any[], comparatorField: string, isAscending: any = true) => {
+  let sortedArray = [];
+
+  if (array && array.length > 0) {
+    const element = array[0][comparatorField]
+
+    const isNumericString = !isNaN(element)
+
+    if (Number.isInteger(element)) {
+      sortedArray = sortNumberArray(array, comparatorField, isAscending)
+    }
+    else if (isNumericString) {
+      sortedArray = sortNumericStringArray(array, comparatorField, isAscending)
+    }
+    else {
+      sortedArray = sortStringArray(array, comparatorField, isAscending)
+    }
+  }
+  return sortedArray;
+};
+
+const sortNumberArray = (array: any[], comparatorField: string, isAscending: any = true) => {
+  let sortedArray = [];
+  try {
+    sortedArray = isAscending
+      ? array.sort((item1, item2) =>
+        item1[comparatorField] >
+          item2[comparatorField]
+          ? 1
+          : -1
+      )
+      : array.sort((item1, item2) =>
+        item1[comparatorField] >
+          item2[comparatorField]
+          ? -1
+          : 1
+      );
+  }
+  catch (error) {
+    if (error instanceof TypeError) {
+      //TODO:Handle
+    }
+  }
+  return sortedArray
+}
+
+const sortNumericStringArray = (array: any[], comparatorField: string, isAscending: any = true) => {
+  let sortedArray = [];
+  try {
+    sortedArray = isAscending
+      ? array.sort((item1, item2) =>
+        parseInt(item1[comparatorField]) >
+          parseInt(item2[comparatorField])
+          ? 1
+          : -1
+      )
+      : array.sort((item1, item2) =>
+        parseInt(item1[comparatorField]) >
+          parseInt(item2[comparatorField])
+          ? -1
+          : 1
+      );
+  }
+  catch (error) {
+    if (error instanceof TypeError) {
+      //TODO:Handle
+    }
+  }
+  return sortedArray
+}
+
+const sortStringArray = (array: any[], comparatorField: string, isAscending: any = true) => {
+  let sortedArray = [];
+  try {
+    sortedArray = isAscending
+      ? array.sort((item1, item2) =>
+        item1[comparatorField].toString().toLowerCase() >
+          item2[comparatorField].toString().toLowerCase()
+          ? 1
+          : -1
+      )
+      : array.sort((item1, item2) =>
+        item1[comparatorField].toString().toLowerCase() >
+          item2[comparatorField].toString().toLowerCase()
+          ? -1
+          : 1
+      );
+  }
+  catch (error) {
+    if (error instanceof TypeError) {
+      //TODO:Handle
+    }
+  }
+  return sortedArray
+}
+

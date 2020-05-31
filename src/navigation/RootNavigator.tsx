@@ -16,6 +16,8 @@ import { StackHeader } from './StackHeader';
 import { Screens } from './Constants';
 import CustomTabBar from './components/CustomTabBar';
 import IndiaScreen from '../containers/IndiaScreen';
+import { Entypo } from '@expo/vector-icons';
+import CountryDetailedData from '../containers/CountryDetailedData';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -30,7 +32,24 @@ const iconMap = {
 
 const RootTabNavigator = () => {
   return (
-    <Tab.Navigator initialRouteName='World' backBehavior='none'>
+    <Tab.Navigator
+      initialRouteName='World'
+      backBehavior='none'
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName, iconColor;
+
+          iconColor = focused ? 'blue' : 'grey';
+          if (route.name === 'Home') {
+            iconName = 'home';
+          } else if (route.name === 'World') {
+            iconName = 'globe';
+          }
+
+          return <Entypo name={iconName} size={20} color={iconColor} />;
+        },
+      })}
+    >
       <Tab.Screen name='World' component={HomeStackNavigator} />
       <Tab.Screen name='Home' component={IndiaStackNavigator} />
     </Tab.Navigator>
@@ -65,17 +84,17 @@ const HomeStackNavigator = () => {
         }}
       />
       <Stack.Screen
-        name={Screens.STATE_DATA}
-        component={StateWiseList}
-        options={{
-          title: 'State Data',
-        }}
-      />
-      <Stack.Screen
         name={Screens.COUNTRY_DATA}
         component={CountriesList}
         options={{
           title: 'Country Data',
+        }}
+      />
+      <Stack.Screen
+        name={Screens.COUNTRY_DETAILED_DATA}
+        component={CountryDetailedData}
+        options={{
+          title: 'DETAILS',
         }}
       />
     </Stack.Navigator>

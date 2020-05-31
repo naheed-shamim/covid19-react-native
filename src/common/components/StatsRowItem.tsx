@@ -14,20 +14,16 @@ interface CollapsibleRowItemProps {
   districtDetails: any;
 }
 export const CollapsibleRowItem = (props: CollapsibleRowItemProps) => {
-  const [selected, setSelected] = useState(false);
+  //   const [selected, setSelected] = useState(false);
 
-  const { overallStateData, districtDetails = {} } = props;
+  const { overallStateData, districtDetails = {}, onPress } = props;
   const districtData = !!districtDetails.districtData
     ? districtDetails.districtData
     : {};
 
   return (
     <View>
-      <HorizontalRowItem
-        overallData={overallStateData}
-        selected={selected}
-        onPress={() => setSelected(!selected)}
-      />
+      <HorizontalRowItem overallData={overallStateData} onPress={onPress} />
 
       {selected && overallStateData.confirmed > 0 && (
         <Animated.View style={styles.districtContainer}>

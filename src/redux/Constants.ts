@@ -20,4 +20,7 @@ export const actionTypes = {
 
     TIME_LINE_SERIES: 'timeLineSeries',
 
+    LOADING_BEGIN: 'loadingBegin',
+    LOADING_OVER: 'loadingOver',
+
 }

@@ -1,13 +1,17 @@
-import { put } from 'redux-saga/effects';
+import { put, call } from 'redux-saga/effects';
 import { actionTypes } from '../Constants';
 import { CovidWorldService } from '../../service/CovidWorldService';
+import { startLoading, endLoading } from '../actions/GenericActions';
 
 
 export function* fetchWorldSummary() {
     try {
+        yield put(startLoading())
         yield put({ type: actionTypes.DATA_LOADING })
-        const response = yield CovidWorldService.fetchSummary();
+        const response = yield (CovidWorldService.fetchSummary());
+
         yield put({ type: actionTypes.WORLD_SUMMARY_LOADED, payload: response.data })
+        yield put(endLoading())
         //TODO: handle success codes
     }
     catch (error) {

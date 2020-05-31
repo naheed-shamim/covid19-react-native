@@ -1,29 +1,130 @@
 import React from 'react';
-import { View, Text, Image, Animated, StyleSheet, Easing } from 'react-native';
+import {
+  TouchableWithoutFeedback,
+  Text,
+  View,
+  Image,
+  Animated,
+  StyleSheet,
+  Easing,
+} from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 import { toCommas } from '../../utils/CommonUtils';
+
 const expandIcon = require('../../../assets/expand-more.png');
 
 interface Props {
   overallData: any;
-  selected: boolean;
+  selected?: boolean;
+  onPress?: event; //todo: check
 }
-export const HorizontalRowItem = (props: Props) => {
+export const HorizontalRowItem = React.memo((props: Props) => {
   // let spinValue = new Animated.Value(0); //TODO: Add Animation
-  const { overallData, selected } = props;
-  const { active, deaths, recovered, confirmed, state } = overallData;
+  const { overallData, selected, onPress } = props;
+  const {
+    active,
+    deaths,
+    deltadeaths,
+    recovered,
+    deltarecovered,
+    confirmed,
+    deltaconfirmed,
+    state,
+    countryOrStateCode = null,
+  } = overallData;
 
-  const rotationDegree = selected && confirmed > 0 ? '90deg' : '0deg';
+  // const spinValue = new Animated.Value(0);
 
-  return (
-    <View style={styles.stateContainer}>
+  // // First set up animation
+  // const animation = Animated.timing(spinValue, {
+  //   toValue: 1,
+  //   duration: 100,
+  //   easing: Easing.linear,
+  //   useNativeDriver: true, // To make use of native driver for performance
+  // });
+
+  // onPress && animation.start();
+
+  // const outputAngleRange = selected ? ['0deg', '90deg'] : ['90deg', '0deg'];
+  // const spin = spinValue.interpolate({
+  //   inputRange: [0, 1],
+  //   outputRange: outputAngleRange,
+  // });
+
+  const getFlagImage = (countryCode: string) => {
+    const flagSource = `https://www.countryflags.io/${countryCode}/flat/16.png`;
+    return (
+      <Image
+        style={{ height: 25, width: 25, marginHorizontal: '1%' }}
+        source={{ uri: flagSource }}
+      />
+    );
+  };
+
+  const animatedImage = () => {
+    return (
       <Image
         source={expandIcon}
-        style={{ transform: [{ rotate: rotationDegree }] }}
+        // style={{ transform: [{ rotate: spin }] }}
       />
-      <Text style={styles.stateNameTxt}>{state}</Text>
-      <Text style={styles.stateNumbersTxt}>{toCommas(active)}</Text>
-      <Text style={styles.stateNumbersTxt}>{toCommas(deaths)}</Text>
-      <Text style={styles.stateNumbersTxt}>{toCommas(recovered)}</Text>
+    );
+  };
+  const displayImage = countryOrStateCode
+    ? getFlagImage(countryOrStateCode)
+    : null;
+
+  return (
+    <TouchableWithoutFeedback onPress={onPress}>
+      <View style={styles.stateContainer}>
+        {displayImage}
+        <Text style={styles.stateNameTxt}>{state}</Text>
+        <NewAndTotalCaseView
+          totalCases={confirmed}
+          newCases={deltaconfirmed}
+          deltaColor={'red'}
+        />
+        <NewAndTotalCaseView
+          totalCases={recovered}
+          newCases={deltarecovered}
+          deltaColor={'green'}
+        />
+        <NewAndTotalCaseView
+          totalCases={deaths}
+          newCases={deltadeaths}
+          deltaColor={'grey'}
+        />
+      </View>
+    </TouchableWithoutFeedback>
+  );
+});
+
+const NewAndTotalCaseView = (props) => {
+  const { totalCases, newCases, deltaColor } = props;
+
+  return (
+    <View style={styles.stateNumberContainer}>
+      <NewCasesView newCases={newCases} deltaColor={deltaColor} />
+
+      <Text style={styles.stateNumbersTxt}>{toCommas(totalCases)}</Text>
+    </View>
+  );
+};
+
+const NewCasesView = (props) => {
+  const { newCases, deltaColor } = props;
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        marginHorizontal: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <AntDesign name='arrowup' size={10} color={deltaColor} />
+      <Text style={[styles.stateDeltaNumbersTxt, { color: deltaColor }]}>
+        {toCommas(newCases)}
+      </Text>
     </View>
   );
 };
@@ -31,19 +132,25 @@ export const HorizontalRowItem = (props: Props) => {
 const styles = StyleSheet.create({
   stateContainer: {
     flex: 1,
-    borderRadius: 2,
+    borderRadius: 5,
     borderWidth: 1,
-    borderBottomWidth: 4,
     borderColor: 'black',
-    margin: 5,
-    padding: 5,
+    marginVertical: 3,
+    margin: 3,
+    padding: 3,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   stateNameTxt: { fontSize: 14, fontWeight: 'bold', flex: 2 },
-  stateNumbersTxt: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    alignSelf: 'center',
+  stateNumberContainer: {
     flex: 1,
+    alignItems: 'center',
+  },
+  stateDeltaNumbersTxt: {
+    fontSize: 12,
+  },
+  stateNumbersTxt: {
+    fontSize: 14,
+    fontWeight: '600',
   },
 });

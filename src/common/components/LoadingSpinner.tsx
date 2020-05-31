@@ -17,14 +17,13 @@ export default class LoadingSpinner extends Component<Props> {
   }
 }
 
+export const showLoader = (value: boolean) => {
+  return <LoadingSpinner isVisible={value} />;
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(242,242,242,0.4)',

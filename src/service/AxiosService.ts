@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { HttpMethods } from './ApiConstants';
 
 export function makeRequest(methodType: HttpMethods, url: string, requestBody: any = null) {
@@ -13,6 +13,7 @@ export function makeRequest(methodType: HttpMethods, url: string, requestBody: a
         case HttpMethods.POST:
             axiosRequest = axios.post(url, requestBody, config);
             break;
+        default: axiosRequest = axios.get(url, config);
     }
     return axiosRequest;
 }
