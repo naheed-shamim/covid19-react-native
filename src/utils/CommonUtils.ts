@@ -1,4 +1,3 @@
-import TimeAgo from "react-native-timeago";
 
 const months = {
   '01': 'Jan',
@@ -50,9 +49,8 @@ export const calculateRemainingTimeFor = date => {
   return { days, hours, min, sec };
 };
 
-export const toCommas = (value: string): string => {
+export const toCommas = (value: string | number): string => {
 
-  let input = value;
   var n1, n2;
   value = value + '' || '';
   // works for integer and floating as well

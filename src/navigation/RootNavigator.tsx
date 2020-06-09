@@ -7,17 +7,17 @@ import {
 } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../containers/HomeScreen';
-import CountriesList from '../containers/CountriesList';
-import StateWiseList from '../containers/StateWiseList';
-import TimelineSeries from '../containers/TimelineSeries';
+import HomeScreen from '../containers/world/HomeScreen';
+import CountriesList from '../containers/world/CountriesList';
+import StateWiseList from '../containers/india/StateWiseList';
+import TimelineSeries from '../containers/india/TimelineSeries';
 import { DrawerContent } from './DrawerContent';
 import { StackHeader } from './StackHeader';
 import { Screens } from './Constants';
-import CustomTabBar from './components/CustomTabBar';
-import IndiaScreen from '../containers/IndiaScreen';
+import IndiaScreen from '../containers/india/IndiaScreen';
 import { Entypo } from '@expo/vector-icons';
-import CountryDetailedData from '../containers/CountryDetailedData';
+import CountryDetailedData from '../containers/world/CountryDetailedData';
+import { StateDetailedData } from '../containers/india/StateDetailedData';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -33,7 +33,7 @@ const iconMap = {
 const RootTabNavigator = () => {
   return (
     <Tab.Navigator
-      initialRouteName='World'
+      // initialRouteName={'Home'}
       backBehavior='none'
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
@@ -50,17 +50,16 @@ const RootTabNavigator = () => {
         },
       })}
     >
-      <Tab.Screen name='World' component={HomeStackNavigator} />
+      <Tab.Screen name='World' component={WorldStackNavigator} />
       <Tab.Screen name='Home' component={IndiaStackNavigator} />
     </Tab.Navigator>
   );
 };
 /* Stack */
-const HomeStackNavigator = () => {
+const WorldStackNavigator = () => {
   return (
     <Stack.Navigator
       initialRouteName={Screens.HOME}
-      headerMode='float'
       screenOptions={{
         header: ({ scene, previous, navigation }) => (
           <StackHeader
@@ -80,7 +79,7 @@ const HomeStackNavigator = () => {
         name={Screens.HOME}
         component={HomeScreen}
         options={{
-          headerTitle: 'COVID-19 Tracker',
+          title: 'COVID-19 Tracker',
         }}
       />
       <Stack.Screen
@@ -93,9 +92,7 @@ const HomeStackNavigator = () => {
       <Stack.Screen
         name={Screens.COUNTRY_DETAILED_DATA}
         component={CountryDetailedData}
-        options={{
-          title: 'DETAILS',
-        }}
+        options={({ route }) => ({ title: route.params.name })}
       />
     </Stack.Navigator>
   );
@@ -104,7 +101,7 @@ const HomeStackNavigator = () => {
 const IndiaStackNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName={Screens.TIME_LINE_SERIES}
+      initialRouteName={Screens.INDIA}
       headerMode='float'
       screenOptions={{
         header: ({ scene, previous, navigation }) => (
@@ -123,15 +120,20 @@ const IndiaStackNavigator = () => {
         name={Screens.INDIA}
         component={IndiaScreen}
         options={{
-          headerTitle: 'Covid India TimeLine',
+          headerTitle: 'COVID-19 India Tracker',
         }}
       />
       <Stack.Screen
         name={Screens.STATE_DATA}
         component={StateWiseList}
         options={{
-          title: 'State Data',
+          title: 'States',
         }}
+      />
+      <Stack.Screen
+        name={Screens.STATE_DETAILED_DATA}
+        component={StateDetailedData}
+        options={({ route }) => ({ title: route.params.name })}
       />
     </Stack.Navigator>
   );

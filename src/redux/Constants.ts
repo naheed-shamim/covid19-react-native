@@ -13,10 +13,13 @@ export const actionTypes = {
     DATA_LOADING: 'dataLoading',
     STATE_DISTRICT_DATA_LOADED: 'stateDistrictDataLoaded',
 
+    OVERALL_DATA_LOAD_FAILED: 'overallDataLoadFailed',
+
 
     WORLD_SUMMARY_LOADING: 'worldSummaryLoading',
     WORLD_SUMMARY_LOADED: 'worldSummaryLoaded',
-    // COUNTRY_DATA_LOADED: 'countryDataLoaded',
+    WORLD_SUMMARY_FAILED: 'worldSummaryFailed',
+
 
     TIME_LINE_SERIES: 'timeLineSeries',
 

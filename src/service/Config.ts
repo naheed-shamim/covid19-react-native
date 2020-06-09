@@ -1,26 +1,20 @@
 import { HttpMethods } from "./ApiConstants";
 
 export const CovidIndiaApi = {
-    All_DATA: () => {
-        return {
-            path: `/data.json`,
-            methodType: HttpMethods.GET,
-        };
+    All_DATA: {
+        path: `/data.json`,
+        methodType: HttpMethods.GET,
     },
-    STATE_WISE: () => {
-        return {
-            path: `/state_district_wise.json`,
-            methodType: HttpMethods.GET,
-        };
-    },
+    STATE_WISE: {
+        path: `/state_district_wise.json`,
+        methodType: HttpMethods.GET,
+    }
 };
 
 export const CovidWorldApi = {
-    SUMMARY: () => {
-        return {
-            path: `/summary`,
-            methodType: HttpMethods.GET,
-        };
+    SUMMARY: {
+        path: `/summary`,
+        methodType: HttpMethods.GET,
     },
     COUNTRIES: () => {
         return {
