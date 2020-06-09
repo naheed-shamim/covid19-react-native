@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "covid-19-india",
-    "slug": "covid-19-india",
+    "name": "covid-19-india-rn",
+    "slug": "covid-19-india-rn",
     "platforms": [
       "ios",
       "android",
