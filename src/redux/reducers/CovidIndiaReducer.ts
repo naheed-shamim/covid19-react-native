@@ -7,7 +7,8 @@ const initialState = {
     totalCases: {},
     statewise: [],
     timeLineSeries: [],
-    stateDistrictWiseData: {}
+    stateDistrictWiseData: null,
+    errorMsg: null
 
 }
 
@@ -21,14 +22,19 @@ const reducer = (state = initialState, action) => {
                 totalCases: action.payload.statewise[0],
                 statewise: action.payload.statewise.slice(1),
                 timeLineSeries: action.payload.cases_time_series,
+                errorMsg: null
             };
         }
         case actionTypes.STATE_DISTRICT_DATA_LOADED:
             return {
                 ...state,
                 stateDistrictWiseData: action.payload,
-                loading: false
+                loading: false,
+                errorMsg: null
             }
+        case actionTypes.OVERALL_DATA_LOAD_FAILED: {
+            return { ...state, loading: false, errorMsg: action.payload }
+        }
         default: {
             return state;
         }

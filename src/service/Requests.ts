@@ -10,6 +10,10 @@ export default class Requests {
         return request;
     }
 
+    static requestBuilder1(methodType: HttpMethods, targetURL: string): Promise<AxiosResponse> {
+        return makeRequest(methodType, targetURL);
+    }
+
     static generateURL(baseURL: string, endpoint: string): string {
         return '' + baseURL + endpoint;
     }

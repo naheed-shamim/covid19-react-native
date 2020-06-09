@@ -10,3 +10,8 @@ export enum HttpMethods {
     PUT = 'PUT',
     DELETE = 'DELETE',
 }
+
+export interface HttpRequest {
+    type: string,
+    url: string
+}

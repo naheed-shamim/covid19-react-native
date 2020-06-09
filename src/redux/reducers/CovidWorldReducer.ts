@@ -3,6 +3,7 @@ import { actionTypes } from "../Constants";
 const initialState = {
     loading: false,
     summary: null,
+    error: null
     // globalLastUpdateTime: '',
     // countries: [],
 }
@@ -15,9 +16,16 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 summary: action.payload,
-                // globalLastUpdateTime: action.payload.Date,
-                // countries: action.payload.Countries,
-                loading: false
+                loading: false,
+                error: null
+            };
+        }
+        case actionTypes.WORLD_SUMMARY_FAILED: {
+            return {
+                ...state,
+                summary: null,
+                loading: false,
+                error: action.payload
             };
         }
         default: {

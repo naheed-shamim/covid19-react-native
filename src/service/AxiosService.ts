@@ -3,7 +3,7 @@ import { HttpMethods } from './ApiConstants';
 
 export function makeRequest(methodType: HttpMethods, url: string, requestBody: any = null) {
     const config = {
-        timeout: 30 * 1000, // Let's say you want to wait at least 30 sec
+        timeout: 10 * 1000, // Let's say you want to wait at least 10 sec
     };
     let axiosRequest;
     switch (methodType) {
@@ -16,4 +16,13 @@ export function makeRequest(methodType: HttpMethods, url: string, requestBody: a
         default: axiosRequest = axios.get(url, config);
     }
     return axiosRequest;
+}
+
+export const handleResponse = (response: any) => {
+    const statusCode = response.status
+    switch (statusCode) {
+        case 200: return response.data
+
+    }
+
 }
