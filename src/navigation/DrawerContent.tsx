@@ -14,36 +14,13 @@ import {
 } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Screens } from './Constants';
+import { showToast } from '../utils/Toast';
 
 export function DrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.drawerContent}>
-        <View style={styles.userInfoSection}>
-          <Avatar.Image
-            source={{
-              uri:
-                'https://pbs.twimg.com/profile_images/952545910990495744/b59hSXUd_400x400.jpg',
-            }}
-            size={50}
-          />
-          <Title style={styles.title}>Dawid Urbaniak</Title>
-          <Caption style={styles.caption}>@trensik</Caption>
-          <View style={styles.row}>
-            <View style={styles.section}>
-              <Paragraph style={[styles.paragraph, styles.caption]}>
-                202
-              </Paragraph>
-              <Caption style={styles.caption}>Following</Caption>
-            </View>
-            <View style={styles.section}>
-              <Paragraph style={[styles.paragraph, styles.caption]}>
-                159
-              </Paragraph>
-              <Caption style={styles.caption}>Followers</Caption>
-            </View>
-          </View>
-        </View>
+        <View style={styles.userInfoSection}></View>
         <Drawer.Section style={styles.drawerSection}>
           <DrawerItem
             icon={({ color, size }) => (
@@ -53,16 +30,10 @@ export function DrawerContent(props) {
                 size={size}
               />
             )}
-            label='Profile'
-            onPress={() => props.navigation.navigate(Screens.HOME_STACK)}
+            label='Global'
+            onPress={() => showToast('Under Development')}
           />
-          <DrawerItem
-            icon={({ color, size }) => (
-              <MaterialCommunityIcons name='tune' color={color} size={size} />
-            )}
-            label='Preferences'
-            onPress={() => {}}
-          />
+
           <DrawerItem
             icon={({ color, size }) => (
               <MaterialCommunityIcons
@@ -71,8 +42,8 @@ export function DrawerContent(props) {
                 size={size}
               />
             )}
-            label='Bookmarks'
-            onPress={() => props.navigation.navigate(Screens.TIMELINE_STACK)}
+            label='India'
+            onPress={() => showToast('Under Development')}
           />
         </Drawer.Section>
         <Drawer.Section title='Preferences'>
