@@ -42,7 +42,7 @@ export const CollapsibleRowItem = (props: CollapsibleRowItemProps) => {
       {selected &&
         !!districtData &&
         Object.keys(districtData).map((item, i) => {
-          const rowColor = i % 2 == 0 ? Colors.white : '#f2f2f2';
+          const rowColor = i % 2 == 0 ? '#faf6d0' : '#a8c7bb';
           return (
             <View
               style={[styles.districtContainer, { backgroundColor: rowColor }]}

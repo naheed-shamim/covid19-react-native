@@ -37,14 +37,14 @@ export const CovidStats = (props) => {
     const { deathPercentage, recoveryPercentage } = getPercentageStats();
     return (
       <View>
-        <Card elevation={3} style={styles.horizontalCardStyle}>
+        <Card elevation={5} style={styles.horizontalCardStyle}>
           <TouchableOpacity
             onPress={onPress}
             style={{
               flexDirection: 'row',
               justifyContent: 'space-around',
               alignItems: 'center',
-              padding: 10,
+              padding: 20,
             }}
           >
             <Text style={styles.statsLabelStyle}>{'Total Confirmed'}</Text>
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   horizontalCardStyle: {
     margin: '5%',
-    padding: '5%',
+    // padding: '5%',
   },
   squareCardStyle: {
     flex: 1,

@@ -10,17 +10,26 @@ import {
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { toCommas } from '../../utils/CommonUtils';
+import { Card } from 'react-native-paper';
 
 const expandIcon = require('../../../assets/expand-more.png');
 
 interface Props {
   overallData: any;
+  serialNum: number;
   selected?: boolean;
-  onPress?: event; //todo: check
+  showDailyInfo?: boolean;
+  onPress?: any; //todo: check
 }
 export const HorizontalRowItem = React.memo((props: Props) => {
   // let spinValue = new Animated.Value(0); //TODO: Add Animation
-  const { overallData, selected, onPress } = props;
+  const {
+    overallData,
+    serialNum,
+    showDailyInfo = false,
+    selected,
+    onPress,
+  } = props;
   const {
     active,
     deaths,
@@ -73,44 +82,64 @@ export const HorizontalRowItem = React.memo((props: Props) => {
     ? getFlagImage(countryOrStateCode)
     : null;
 
+  const showSerialNum = () => {
+    if (!!serialNum) {
+      return (
+        <Text
+          style={[styles.stateNameTxt, { flex: 0, paddingHorizontal: '1%' }]}
+        >
+          {serialNum}.
+        </Text>
+      );
+    } else return null;
+  };
+
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <View style={styles.stateContainer}>
-        {displayImage}
-        <Text style={styles.stateNameTxt}>{state}</Text>
-        <NewAndTotalCaseView
-          totalCases={confirmed}
-          newCases={deltaconfirmed}
-          deltaColor={'red'}
-        />
-        <NewAndTotalCaseView
-          totalCases={recovered}
-          newCases={deltarecovered}
-          deltaColor={'green'}
-        />
-        <NewAndTotalCaseView
-          totalCases={deaths}
-          newCases={deltadeaths}
-          deltaColor={'grey'}
-        />
-      </View>
+      <Card elevation={3} style={{ margin: 5 }}>
+        <View style={styles.stateContainer}>
+          {showSerialNum()}
+          {displayImage}
+          <Text style={styles.stateNameTxt}>{state}</Text>
+          <NewAndTotalCaseView
+            totalCases={confirmed}
+            newCases={deltaconfirmed}
+            deltaColor={'red'}
+            showNewCases={showDailyInfo}
+          />
+          <NewAndTotalCaseView
+            totalCases={recovered}
+            newCases={deltarecovered}
+            deltaColor={'green'}
+            showNewCases={showDailyInfo}
+          />
+          <NewAndTotalCaseView
+            totalCases={deaths}
+            newCases={deltadeaths}
+            deltaColor={'grey'}
+            showNewCases={showDailyInfo}
+          />
+        </View>
+      </Card>
     </TouchableWithoutFeedback>
   );
 });
 
-const NewAndTotalCaseView = (props) => {
-  const { totalCases, newCases, deltaColor } = props;
+const NewAndTotalCaseView = React.memo((props) => {
+  const { totalCases, newCases, deltaColor, showNewCases } = props;
 
   return (
     <View style={styles.stateNumberContainer}>
-      <NewCasesView newCases={newCases} deltaColor={deltaColor} />
+      {showNewCases && (
+        <NewCasesView newCases={newCases} deltaColor={deltaColor} />
+      )}
 
       <Text style={styles.stateNumbersTxt}>{toCommas(totalCases)}</Text>
     </View>
   );
-};
+});
 
-const NewCasesView = (props) => {
+const NewCasesView = React.memo((props) => {
   const { newCases, deltaColor } = props;
   return (
     <View
@@ -127,30 +156,30 @@ const NewCasesView = (props) => {
       </Text>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   stateContainer: {
     flex: 1,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: 'black',
+    // borderRadius: 5,
+    // borderWidth: 1,
+    // borderColor: 'black',
     marginVertical: 3,
-    margin: 3,
-    padding: 3,
+    margin: 8,
+    padding: 8,
     flexDirection: 'row',
     alignItems: 'center',
   },
-  stateNameTxt: { fontSize: 14, fontWeight: 'bold', flex: 2 },
+  stateNameTxt: { fontSize: 12, fontWeight: 'bold', flex: 2 },
   stateNumberContainer: {
     flex: 1,
     alignItems: 'center',
   },
   stateDeltaNumbersTxt: {
-    fontSize: 12,
+    fontSize: 10,
   },
   stateNumbersTxt: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '600',
   },
 });

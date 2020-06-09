@@ -11,6 +11,7 @@ const WithLoadingSpinner = (label = '', color = Theme.PRIMARY_ACCENT) => (
   WrappedComponent
 ) => {
   return class WithLoadingSpinner extends Component {
+    _isMounted: boolean;
     constructor(props) {
       super(props);
       this.state = {

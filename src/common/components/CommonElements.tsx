@@ -1,11 +1,29 @@
 import React from 'react';
 
 import TimeAgo from 'react-native-timeago';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { toCommas } from '../../utils/CommonUtils';
+import { icons } from '../../constants/Constants';
+import Loader from './Modal-Loader';
 
-const LastUpdatedTime = (props) => {
+export const showLoader = (visible: boolean) => {
+  return <Loader visible={visible} />;
+};
+
+export const ErrorLabel = (props) => {
+  const { message, onPress, btnLabel = 'Try Again' } = props;
+  return (
+    <View style={{ alignItems: 'center' }}>
+      <Text>{message}</Text>
+      <TouchableOpacity onPress={onPress}>
+        <Text style={{ color: 'blue' }}>{btnLabel}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const LastUpdatedTime = React.memo((props) => {
   const { lastUpdatedTime } = props;
 
   return (
@@ -20,7 +38,7 @@ const LastUpdatedTime = (props) => {
       <TimeAgo time={lastUpdatedTime} />
     </View>
   );
-};
+});
 export const MemoizedLastUpdatedTime = React.memo(LastUpdatedTime);
 
 const TotalAndNewCase = (props) => {
@@ -51,25 +69,29 @@ export const FlatListHeader = (props) => {
         style={flatListHeaderStyles.title}
         onPress={() => onPress('title')}
       >
+        <Image source={icons.sort} style={{ height: 12, width: 12 }} />
         <Text style={flatListHeaderStyles.text}>{title}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={flatListHeaderStyles.options}
         onPress={() => onPress('confirmed')}
       >
-        <Text style={flatListHeaderStyles.text}>{'Confirmed'}</Text>
+        <Image source={icons.sort} style={{ height: 12, width: 12 }} />
+        <Text style={flatListHeaderStyles.text}>{'CNFMD'}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={flatListHeaderStyles.options}
         onPress={() => onPress('recovered')}
       >
-        <Text style={flatListHeaderStyles.text}>{'Recovered'}</Text>
+        <Image source={icons.sort} style={{ height: 12, width: 12 }} />
+        <Text style={flatListHeaderStyles.text}>{'RCVD'}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={flatListHeaderStyles.options}
         onPress={() => onPress('deaths')}
       >
-        <Text style={flatListHeaderStyles.text}>{'Deaths'}</Text>
+        <Image source={icons.sort} style={{ height: 12, width: 12 }} />
+        <Text style={flatListHeaderStyles.text}>{'DEATHS'}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -92,15 +114,25 @@ export const ShowEmptyWithRefresh = (props) => {
 const flatListHeaderStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginTop: '3%',
     margin: '1%',
-    paddingLeft: 20,
+    paddingLeft: 10,
     padding: 3,
-    
   },
-  title: { flex: 2 },
-  options: {
+  title: {
+    flexDirection: 'row',
+    flex: 2,
+    // borderWidth: 0.5,
+    borderBottomWidth: 1,
     alignItems: 'center',
+    borderColor: 'black',
+  },
+  options: {
+    // borderWidth: 0.5,
+    borderBottomWidth: 1,
+    // borderColor: 'black',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
   },
   text: { fontSize: 12 },
