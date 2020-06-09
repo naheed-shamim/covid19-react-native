@@ -12,7 +12,7 @@ export function* fetchWorldSummary() {
         yield put({ type: actionTypes.DATA_LOADING })
 
         const worldSummary = yield callCovidWorldAPI(CovidWorldApi.SUMMARY);
-        console.log(worldSummary)
+
         yield put({ type: actionTypes.WORLD_SUMMARY_LOADED, payload: worldSummary })
         yield put(endLoading())
         //TODO: handle success codes

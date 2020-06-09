@@ -146,7 +146,7 @@ const RootDrawerNavigator = () => {
     <Drawer.Navigator
       initialRouteName={Screens.HOME_STACK}
       drawerStyle={{
-        backgroundColor: '#c6cbef',
+        backgroundColor: 'white',
         width: 240,
       }}
       screenOptions={{

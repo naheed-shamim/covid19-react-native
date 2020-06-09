@@ -96,33 +96,6 @@ export class StateDetailedData extends React.Component {
     );
   };
 
-  _renderSingleStat = (
-    title: string,
-    subTitle: string,
-    value: number,
-    total: number,
-    fontColor: string
-  ) => {
-    const percent = Number((value / total) * 100).toFixed(2);
-
-    return (
-      <Card style={{ margin: '2%' }}>
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ flex: 1, margin: '2%', alignItems: 'center' }}>
-            <Text style={[styles.enlargedText, { color: fontColor }]}>
-              {percent}%
-            </Text>
-            <Text>{title}</Text>
-          </View>
-          <View style={{ flex: 1, margin: '2%', alignItems: 'center' }}>
-            <Text style={[styles.enlargedText]}>{toCommas(value)}</Text>
-            <Text>{subTitle}</Text>
-          </View>
-        </View>
-      </Card>
-    );
-  };
-
   _renderDetailView = () => {
     const { district, state } = this.props.route.params;
     const { districtData } = district;

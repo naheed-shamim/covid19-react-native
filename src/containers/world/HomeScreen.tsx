@@ -35,7 +35,7 @@ class HomeScreen extends Component<Props> {
 
   _renderMainView = () => {
     const { worldErrorMsg, summary } = this.props;
-    console.log(summary);
+
     if (worldErrorMsg) {
       return (
         <View

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
 import { FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
-import { icons } from '../../constants/Constants';
 import { toCommas } from '../../utils/CommonUtils';
 
 export const CaseSummary = (props) => {
