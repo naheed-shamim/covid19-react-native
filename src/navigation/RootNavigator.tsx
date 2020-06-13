@@ -1,6 +1,12 @@
 import React from 'react';
-import { Text } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { Text, SafeAreaView } from 'react-native';
+import { useColorScheme, AppearanceProvider } from 'react-native-appearance';
+import {
+  NavigationContainer,
+  DefaultTheme,
+  DarkTheme,
+  useTheme,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   TransitionPresets,
@@ -18,6 +24,9 @@ import IndiaScreen from '../containers/india/IndiaScreen';
 import { Entypo } from '@expo/vector-icons';
 import CountryDetailedData from '../containers/world/CountryDetailedData';
 import { StateDetailedData } from '../containers/india/StateDetailedData';
+import VisualTheme from '../common/VisualTheme';
+import { ReduxStore } from '../redux/ReduxStore';
+import { Provider } from 'react-redux';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -31,9 +40,10 @@ const iconMap = {
 };
 
 const RootTabNavigator = () => {
+  const { colors } = useTheme();
+
   return (
     <Tab.Navigator
-      // initialRouteName={'Home'}
       backBehavior='none'
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
@@ -49,6 +59,11 @@ const RootTabNavigator = () => {
           return <Entypo name={iconName} size={20} color={iconColor} />;
         },
       })}
+      tabBarOptions={{
+        activeTintColor: 'tomato',
+        inactiveTintColor: 'gray',
+        style: { backgroundColor: colors.background },
+      }}
     >
       <Tab.Screen name='World' component={WorldStackNavigator} />
       <Tab.Screen name='Home' component={IndiaStackNavigator} />
@@ -166,9 +181,11 @@ const RootDrawerNavigator = () => {
 
 const RootNavigator = () => {
   return (
-    <NavigationContainer>
-      <RootDrawerNavigator />
-    </NavigationContainer>
+    <Provider store={ReduxStore}>
+      <SafeAreaView style={VisualTheme.droidSafeArea}>
+        <RootDrawerNavigator />
+      </SafeAreaView>
+    </Provider>
   );
 };
 

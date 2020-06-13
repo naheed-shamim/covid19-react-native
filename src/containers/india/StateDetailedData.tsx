@@ -101,12 +101,13 @@ export class StateDetailedData extends React.Component {
     const { districtData } = district;
     return (
       <View style={{ margin: '1%' }}>
+        <Text>District Data</Text>
         <View style={{ flex: 1, flexDirection: 'row' }}>
           <Text style={styles.districtText}>District</Text>
           <Text style={styles.districtConfirmedTxt}>Confirmed</Text>
         </View>
         {Object.keys(districtData).map((item, i) => {
-          const rowColor = i % 2 == 0 ? '#faf6d0' : '#a8c7bb';
+          const rowColor = i % 2 == 0 ? '#fff' : '#1110';
           return (
             <View
               style={[styles.districtContainer, { backgroundColor: rowColor }]}
@@ -139,8 +140,8 @@ export class StateDetailedData extends React.Component {
 
     return (
       <ScrollView style={{ flex: 1 }}>
-        {this._renderCaseSummary()}
         {this._renderPercentageStates()}
+        {this._renderCaseSummary()}
         {this._renderStateSpecificData()}
       </ScrollView>
     );
