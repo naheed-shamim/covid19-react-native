@@ -17,6 +17,8 @@ import { getWorldSummary } from '../../redux/actions/CovidWorldActions';
 import { CovidStats } from '../../common/components/CovidStats';
 import { Screens } from '../../navigation/Constants';
 import { showLoader, ErrorLabel } from '../../common/components/CommonElements';
+import { useTheme } from '@react-navigation/native';
+import { WithTheme } from '../../common/hoc/WithTheme';
 
 interface Props {
   totalCases: {};
@@ -34,7 +36,7 @@ class HomeScreen extends Component<Props> {
   };
 
   _renderMainView = () => {
-    const { worldErrorMsg, summary } = this.props;
+    const { worldErrorMsg, summary, themeColors } = this.props;
 
     if (worldErrorMsg) {
       return (
@@ -63,7 +65,12 @@ class HomeScreen extends Component<Props> {
       } = Global;
 
       return (
-        <ScrollView style={styles.mainContainer}>
+        <ScrollView
+          style={[
+            styles.mainContainer,
+            { backgroundColor: themeColors.background },
+          ]}
+        >
           <CovidStats
             headerTitle='WORLD Covid'
             headerColor={'blue'}
@@ -83,7 +90,6 @@ class HomeScreen extends Component<Props> {
 
   render() {
     const { loading } = this.props;
-    console.log(loading);
     return loading ? showLoader(loading) : this._renderMainView();
   }
 }
@@ -105,38 +111,10 @@ const mapDispatchToProps = {
   getWorldSummary,
 };
 
-const blueHeaderHeight = 55;
 const styles = StyleSheet.create({
-  mainContainer: { flex: 1, backgroundColor: 'white' },
-  dummyHeader: {
-    aspectRatio: 3,
-    backgroundColor: 'blue',
-    justifyContent: 'center',
-  },
-  titleText: {
-    fontSize: 20,
-    color: 'white',
-    fontWeight: 'bold',
-    marginHorizontal: '5%',
-  },
-  statsContainer: {
-    width: '100%',
-    height: `${blueHeaderHeight}%`,
-    marginTop: '-15%',
-  },
-  horizontalCardStyle: {
-    margin: '5%',
-    padding: '5%',
-  },
-  squareCardStyle: {
-    flex: 1,
-    margin: '2%',
-    padding: '2%',
-    justifyContent: 'center',
-  },
-  squareCardContainerStyle: { alignItems: 'center', padding: '10%' },
-  statsValueStyle: { fontSize: 25, fontWeight: '600' },
-  statsLabelStyle: { fontSize: 15 },
+  mainContainer: { flex: 1 },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
+const withTheme = WithTheme(HomeScreen);
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme);

@@ -1,8 +1,6 @@
 import React from 'react';
 import { FlatList, View, InteractionManager, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { Searchbar } from 'react-native-paper';
-import LoadingSpinner from '../../common/components/LoadingSpinner';
 import { RecyclerListView } from 'recyclerlistview';
 import {
   FlatListHeader,
@@ -12,6 +10,7 @@ import { HorizontalRowItem } from '../../common/components/HorizontalRowItem';
 import { Screens } from '../../navigation/Constants';
 import { sortArrayBy } from '../../utils/CommonUtils';
 import { SearchBar } from '../../common/components/Searchbar';
+import { WithTheme } from '../../common/hoc/WithTheme';
 
 class CountriesList extends React.PureComponent {
   countriesHolder: any;
@@ -102,7 +101,7 @@ class CountriesList extends React.PureComponent {
 
   _renderFlatList = () => {
     const { countryList } = this.state;
-
+    const { themeColors } = this.props;
     const showHeaders = (
       <FlatListHeader
         title={'COUNTRIES'}
@@ -110,7 +109,7 @@ class CountriesList extends React.PureComponent {
       />
     );
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{ flex: 1, backgroundColor: themeColors.background }}>
         {this._showSearchBar()}
         <FlatList
           ListHeaderComponent={showHeaders}
@@ -168,4 +167,5 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export default connect(mapStateToProps, null)(CountriesList);
+const withThemedComponent = WithTheme(CountriesList);
+export default connect(mapStateToProps, null)(withThemedComponent);

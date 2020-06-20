@@ -1,12 +1,14 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { Card } from 'react-native-paper';
+import { Card, withTheme } from 'react-native-paper';
 import { Colors } from '../../common/VisualTheme';
 import { formatDate, toCommas } from '../../utils/CommonUtils';
 import { MemoizedLastUpdatedTime } from '../../common/components/CommonElements';
 import { CaseSummary } from '../../common/components/CaseSummary';
+import { State } from 'react-native-gesture-handler';
+import { WithTheme } from '../../common/hoc/WithTheme';
 
-export class StateDetailedData extends React.Component {
+class StateDetailedData extends React.Component {
   _renderStateSpecificData = () => {
     const { state } = this.props.route.params;
     const lastUpdatedTime = formatDate(state.lastupdatedtime);
@@ -15,25 +17,6 @@ export class StateDetailedData extends React.Component {
         {this._renderDetailView()}
         <MemoizedLastUpdatedTime lastUpdatedTime={lastUpdatedTime} />
       </View>
-    );
-  };
-
-  _renderStateToIndiaComparison = () => {
-    const { state, total } = this.props.route.params;
-    const percent = Number((state.confirmed / total.confirmed) * 100).toFixed(
-      2
-    );
-    return (
-      <Card style={{ margin: '2%' }}>
-        <View style={{ alignItems: 'center', flex: 1, padding: '3%' }}>
-          <Text style={[styles.enlargedText, { color: 'red' }]}>
-            {percent}%
-          </Text>
-          <Text style={{ flex: 1, textAlign: 'center' }}>
-            of total confirmed cases from India
-          </Text>
-        </View>
-      </Card>
     );
   };
 
@@ -54,6 +37,8 @@ export class StateDetailedData extends React.Component {
   };
 
   _renderPercentageStates = () => {
+    const { themeColors } = this.props;
+
     const { state, total } = this.props.route.params;
 
     const deathPercent = Number((state.deaths / state.confirmed) * 100).toFixed(
@@ -67,14 +52,18 @@ export class StateDetailedData extends React.Component {
       (state.confirmed / total.confirmed) * 100
     ).toFixed(2);
 
+    const labelStyle = [styles.labelStyle, { color: themeColors.text }];
+
     return (
-      <Card style={{ margin: '2%' }}>
+      <Card style={{ margin: '2%', backgroundColor: themeColors.card }}>
         <View style={{ alignItems: 'center', flex: 1, padding: '3%' }}>
-          <Text>{state.state} has </Text>
+          <Text style={labelStyle}>{state.state} has </Text>
           <Text style={[styles.enlargedText, { color: 'red' }]}>
             {relativePercent}%
           </Text>
-          <Text style={{ flex: 1, textAlign: 'center' }}>
+          <Text
+            style={{ flex: 1, textAlign: 'center', color: themeColors.text }}
+          >
             of total confirmed cases from India
           </Text>
         </View>
@@ -83,13 +72,13 @@ export class StateDetailedData extends React.Component {
             <Text style={[styles.enlargedText, { color: 'green' }]}>
               {recoveryPercent}%
             </Text>
-            <Text>{'Recovery Percentage'}</Text>
+            <Text style={labelStyle}>{'Recovery Percentage'}</Text>
           </View>
           <View style={{ flex: 1, margin: '2%', alignItems: 'center' }}>
             <Text style={[styles.enlargedText, { color: 'grey' }]}>
               {deathPercent}%
             </Text>
-            <Text>{'Death Percentage'}</Text>
+            <Text style={labelStyle}>{'Death Percentage'}</Text>
           </View>
         </View>
       </Card>
@@ -97,30 +86,44 @@ export class StateDetailedData extends React.Component {
   };
 
   _renderDetailView = () => {
-    const { district, state } = this.props.route.params;
+    const { themeColors } = this.props;
+    const { district } = this.props.route.params;
     const { districtData } = district;
     return (
       <View style={{ margin: '1%' }}>
         <Text>District Data</Text>
         <View style={{ flex: 1, flexDirection: 'row' }}>
-          <Text style={styles.districtText}>District</Text>
-          <Text style={styles.districtConfirmedTxt}>Confirmed</Text>
+          <Text style={[styles.districtText, { color: themeColors.text }]}>
+            District
+          </Text>
+          <Text
+            style={[styles.districtConfirmedTxt, , { color: themeColors.text }]}
+          >
+            Confirmed
+          </Text>
         </View>
         {Object.keys(districtData).map((item, i) => {
-          const rowColor = i % 2 == 0 ? '#fff' : '#1110';
+          const rowColor = themeColors.card;
           return (
             <View
               style={[styles.districtContainer, { backgroundColor: rowColor }]}
               key={i}
             >
-              <Text style={styles.districtText}>{item}</Text>
-              <Text style={styles.districtConfirmedTxt}>
+              <Text style={[styles.districtText, { color: themeColors.text }]}>
+                {item}
+              </Text>
+              <Text
+                style={[
+                  styles.districtConfirmedTxt,
+                  { color: themeColors.text },
+                ]}
+              >
                 {toCommas(districtData[item].confirmed)}
               </Text>
             </View>
           );
         })}
-        <Card>
+        {/* <Card>
           <View style={styles.districtContainer}>
             <Text style={[styles.districtText, styles.enlargedText]}>
               Total
@@ -129,15 +132,12 @@ export class StateDetailedData extends React.Component {
               {toCommas(state.confirmed)}
             </Text>
           </View>
-        </Card>
+        </Card> */}
       </View>
     );
   };
 
   render() {
-    console.log(this.props);
-    const { state } = this.props.route.params;
-
     return (
       <ScrollView style={{ flex: 1 }}>
         {this._renderPercentageStates()}
@@ -148,11 +148,17 @@ export class StateDetailedData extends React.Component {
   }
 }
 
+const withThemedComponent = WithTheme(StateDetailedData);
+
+export default withThemedComponent;
+
 const styles = StyleSheet.create({
   districtContainer: {
     flexDirection: 'row',
     padding: 1,
     marginLeft: 5,
+    marginVertical: 2,
+    paddingVertical: 5,
     marginRight: 5,
     backgroundColor: 'white',
   },
@@ -170,5 +176,8 @@ const styles = StyleSheet.create({
   enlargedText: {
     fontSize: 24,
     fontWeight: 'bold',
+  },
+  labelStyle: {
+    fontSize: 14,
   },
 });

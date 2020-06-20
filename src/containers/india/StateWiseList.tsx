@@ -12,6 +12,7 @@ import {
 import { sortArrayBy } from '../../utils/CommonUtils';
 import { Screens } from '../../navigation/Constants';
 import { SearchBar } from '../../common/components/Searchbar';
+import { WithTheme } from '../../common/hoc/WithTheme';
 
 class StateWiseList extends BaseComponent {
   stateHolder: any;
@@ -104,9 +105,9 @@ class StateWiseList extends BaseComponent {
   };
 
   _renderFlatList = () => {
-    const { statewise = [], stateDistrictWiseData = {} } = this.props;
+    const { stateDistrictWiseData = {}, route, themeColors } = this.props;
     const { stateList = [] } = this.state;
-    // console.log(statewise);
+
     const showHeaders = (
       <FlatListHeader
         title={'STATE'}
@@ -114,7 +115,7 @@ class StateWiseList extends BaseComponent {
       />
     );
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: themeColors.background }}>
         {this._showSearchBar()}
         {/* {showHeaders} */}
         <FlatList
@@ -190,7 +191,7 @@ class StateWiseList extends BaseComponent {
 
   render() {
     const { didFinishAnimating } = this.state;
-  
+
     const view = didFinishAnimating
       ? this._renderFlatList()
       : this._showLoader(didFinishAnimating);
@@ -211,4 +212,9 @@ const mapDispatchToProps = {
   getStateDistrictStats,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(StateWiseList);
+const withThemedComponent = WithTheme(StateWiseList);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withThemedComponent);

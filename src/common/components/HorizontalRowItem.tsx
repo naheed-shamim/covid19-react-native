@@ -11,6 +11,7 @@ import {
 import { AntDesign } from '@expo/vector-icons';
 import { toCommas } from '../../utils/CommonUtils';
 import { Card } from 'react-native-paper';
+import { useTheme } from '@react-navigation/native';
 
 const expandIcon = require('../../../assets/expand-more.png');
 
@@ -41,6 +42,8 @@ export const HorizontalRowItem = React.memo((props: Props) => {
     state,
     countryOrStateCode = null,
   } = overallData;
+
+  const { colors } = useTheme();
 
   // const spinValue = new Animated.Value(0);
 
@@ -86,7 +89,10 @@ export const HorizontalRowItem = React.memo((props: Props) => {
     if (!!serialNum) {
       return (
         <Text
-          style={[styles.stateNameTxt, { flex: 0, paddingHorizontal: '1%' }]}
+          style={[
+            styles.stateNameTxt,
+            { flex: 0, paddingHorizontal: '1%', color: colors.text },
+          ]}
         >
           {serialNum}.
         </Text>
@@ -96,11 +102,13 @@ export const HorizontalRowItem = React.memo((props: Props) => {
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <Card elevation={3} style={{ margin: 5 }}>
+      <Card elevation={3} style={{ margin: 5, backgroundColor: colors.card }}>
         <View style={styles.stateContainer}>
           {showSerialNum()}
           {displayImage}
-          <Text style={styles.stateNameTxt}>{state}</Text>
+          <Text style={[styles.stateNameTxt, { color: colors.text }]}>
+            {state}
+          </Text>
           <NewAndTotalCaseView
             totalCases={confirmed}
             newCases={deltaconfirmed}
@@ -126,6 +134,8 @@ export const HorizontalRowItem = React.memo((props: Props) => {
 });
 
 const NewAndTotalCaseView = React.memo((props) => {
+  const { colors } = useTheme();
+
   const { totalCases, newCases, deltaColor, showNewCases } = props;
 
   return (
@@ -134,7 +144,9 @@ const NewAndTotalCaseView = React.memo((props) => {
         <NewCasesView newCases={newCases} deltaColor={deltaColor} />
       )}
 
-      <Text style={styles.stateNumbersTxt}>{toCommas(totalCases)}</Text>
+      <Text style={[styles.stateNumbersTxt, { color: colors.text }]}>
+        {toCommas(totalCases)}
+      </Text>
     </View>
   );
 });

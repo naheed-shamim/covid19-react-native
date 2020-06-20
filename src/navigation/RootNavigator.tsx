@@ -16,17 +16,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../containers/world/HomeScreen';
 import CountriesList from '../containers/world/CountriesList';
 import StateWiseList from '../containers/india/StateWiseList';
-import TimelineSeries from '../containers/india/TimelineSeries';
+
 import { DrawerContent } from './DrawerContent';
 import { StackHeader } from './StackHeader';
 import { Screens } from './Constants';
 import IndiaScreen from '../containers/india/IndiaScreen';
 import { Entypo } from '@expo/vector-icons';
 import CountryDetailedData from '../containers/world/CountryDetailedData';
-import { StateDetailedData } from '../containers/india/StateDetailedData';
+import StateDetailedData from '../containers/india/StateDetailedData';
 import VisualTheme from '../common/VisualTheme';
-import { ReduxStore } from '../redux/ReduxStore';
-import { Provider } from 'react-redux';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -49,7 +47,7 @@ const RootTabNavigator = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName, iconColor;
 
-          iconColor = focused ? 'blue' : 'grey';
+          iconColor = focused ? colors.primary : 'grey';
           if (route.name === 'Home') {
             iconName = 'home';
           } else if (route.name === 'World') {
@@ -60,9 +58,9 @@ const RootTabNavigator = () => {
         },
       })}
       tabBarOptions={{
-        activeTintColor: 'tomato',
+        activeTintColor: colors.primary,
         inactiveTintColor: 'gray',
-        style: { backgroundColor: colors.background },
+        style: { backgroundColor: colors.card },
       }}
     >
       <Tab.Screen name='World' component={WorldStackNavigator} />
@@ -72,6 +70,8 @@ const RootTabNavigator = () => {
 };
 /* Stack */
 const WorldStackNavigator = () => {
+  const { colors } = useTheme();
+  const themeColor = { themeColors: colors };
   return (
     <Stack.Navigator
       initialRouteName={Screens.HOME}
@@ -96,6 +96,7 @@ const WorldStackNavigator = () => {
         options={{
           title: 'COVID-19 Tracker',
         }}
+        initialParams={themeColor}
       />
       <Stack.Screen
         name={Screens.COUNTRY_DATA}
@@ -103,17 +104,21 @@ const WorldStackNavigator = () => {
         options={{
           title: 'Country Data',
         }}
+        initialParams={themeColor}
       />
       <Stack.Screen
         name={Screens.COUNTRY_DETAILED_DATA}
         component={CountryDetailedData}
         options={({ route }) => ({ title: route.params.name })}
+        initialParams={themeColor}
       />
     </Stack.Navigator>
   );
 };
 
 const IndiaStackNavigator = () => {
+  const { colors } = useTheme();
+  const themeColor = { themeColors: colors };
   return (
     <Stack.Navigator
       initialRouteName={Screens.INDIA}
@@ -137,6 +142,7 @@ const IndiaStackNavigator = () => {
         options={{
           headerTitle: 'COVID-19 India Tracker',
         }}
+        initialParams={themeColor}
       />
       <Stack.Screen
         name={Screens.STATE_DATA}
@@ -144,19 +150,21 @@ const IndiaStackNavigator = () => {
         options={{
           title: 'States',
         }}
+        initialParams={themeColor}
       />
       <Stack.Screen
         name={Screens.STATE_DETAILED_DATA}
         component={StateDetailedData}
         options={({ route }) => ({ title: route.params.name })}
+        initialParams={themeColor}
       />
     </Stack.Navigator>
   );
 };
 
-/* ==== DRAWER CONTETN ================================================================= */
+/* ==== DRAWER CONTENT ================================================================= */
 
-const RootDrawerNavigator = () => {
+const RootDrawerNavigator = (props) => {
   return (
     <Drawer.Navigator
       initialRouteName={Screens.HOME_STACK}
@@ -168,7 +176,9 @@ const RootDrawerNavigator = () => {
         ...TransitionPresets.ScaleFromCenterAndroid,
         gestureEnabled: true,
       }}
-      drawerContent={(navigation) => <DrawerContent {...navigation} />}
+      drawerContent={(navigation) => (
+        <DrawerContent {...navigation} onThemeToggle={props.toggleTheme} />
+      )}
     >
       <Drawer.Screen name={Screens.HOME_STACK} component={RootTabNavigator} />
       <Drawer.Screen
@@ -180,12 +190,37 @@ const RootDrawerNavigator = () => {
 };
 
 const RootNavigator = () => {
+  const scheme = useColorScheme();
+  const { colors } = useTheme();
+
+  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+
+  function toggleTheme() {
+    // We will pass this function to Drawer and invoke it on theme switch press
+    setIsDarkTheme((isDark) => !isDark);
+  }
+
+  const CustomDarkTheme = {
+    ...DarkTheme,
+    colors: {
+      ...DarkTheme.colors,
+      text: '#fff',
+    },
+  };
+
+  // const selectedTheme = isDarkTheme ? CustomDarkTheme : DefaultTheme;
+  const selectedTheme = scheme == 'dark' ? CustomDarkTheme : DefaultTheme;
+
   return (
-    <Provider store={ReduxStore}>
-      <SafeAreaView style={VisualTheme.droidSafeArea}>
-        <RootDrawerNavigator />
-      </SafeAreaView>
-    </Provider>
+    <AppearanceProvider>
+      <NavigationContainer theme={selectedTheme}>
+        <SafeAreaView
+          style={[VisualTheme.droidSafeArea, { backgroundColor: colors.card }]}
+        >
+          <RootDrawerNavigator toggleTheme={toggleTheme} />
+        </SafeAreaView>
+      </NavigationContainer>
+    </AppearanceProvider>
   );
 };
 

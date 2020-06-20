@@ -47,7 +47,7 @@ export function DrawerContent(props) {
           />
         </Drawer.Section>
         <Drawer.Section title='Preferences'>
-          <TouchableRipple onPress={() => {}}>
+          <TouchableRipple onPress={props.onThemeToggle}>
             <View style={styles.preference}>
               <Text>Dark Theme</Text>
               <View pointerEvents='none'>

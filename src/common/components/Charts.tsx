@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -17,8 +17,9 @@ import {
   ContributionGraph,
   StackedBarChart,
 } from 'react-native-chart-kit';
-import LoadingSpinner from './LoadingSpinner';
 import { BackgroundColoredButton } from './BackgroundColoredButton';
+import { useTheme } from '@react-navigation/native';
+import { toCommas } from '../../utils/CommonUtils';
 
 enum TYPE {
   FORTNIGHT = 0,
@@ -38,53 +39,73 @@ interface Props {
   color: string;
   dataSet: [];
 }
-  
 
 //TODO: Clear on change values total cases
 //TODO: add per month etc
 
-export class CustomLineChart extends React.PureComponent<Props> {
-  state = {
-    valueSelected: '',
-    daySelected: '',
-    isCumulative: this.props.cumulative,
-    chartSpan: TYPE.MONTH,
-    caseType: CASE_TYPE.TOTAL_CONFIRMED,
-    didFinishAnimating: true,
+export const CustomLineChart = (props: Props) => {
+  const { colors } = useTheme();
+
+  const chartConfig = (primaryColor: string) => ({
+    backgroundColor: colors.card,
+    backgroundGradientFrom: colors.card,
+    backgroundGradientTo: colors.card,
+    decimalPlaces: 0, // optional, defaults to 2dp
+    color: () => `${primaryColor}`,
+    // color: (opacity = 1) => `255, 0, 0, ${opacity})`,
+    labelColor: (opacity = 1) => colors.text,
+    style: {
+      borderRadius: 1,
+    },
+    propsForDots: {
+      r: '2',
+      strokeWidth: '1',
+      stroke: `${primaryColor}`,
+    },
+  });
+
+  const [valueSelected, setValueSelected] = useState('');
+  const [daySelected, setDaySelected] = useState('');
+  const [isCumulative, setIsCumulative] = useState(props.cumulative);
+  const [chartSpan, setChartSpan] = useState(TYPE.MONTH);
+  const [chartCaseType, setChartCaseType] = useState(CASE_TYPE.TOTAL_CONFIRMED);
+
+  const toggleCumulativeDataSwitch = () => {
+    setIsCumulative((cumulative) => !cumulative);
+    setDaySelected('');
   };
 
-  toggleCumulativeDataSwitch = () => {
-    this.setState({ isCumulative: !this.state.isCumulative, daySelected: '' });
-  };
-
-  renderTabHeader = (caseType: CASE_TYPE) => {
-    const tabHeaderStyle = styles.tabHeaderStyle;
+  const renderTabHeader = (caseType: CASE_TYPE) => {
+    const tabHeaderStyle = [
+      styles.tabHeaderStyle,
+      { backgroundColor: colors.card },
+    ];
     const highlightedTabStyle = {
-      ...tabHeaderStyle,
+      ...styles.tabHeaderStyle,
+      backgroundColor: colors.card,
       borderBottomWidth: 2,
       borderColor: 'red',
     };
     const tabStyle =
-      this.state.caseType == caseType ? highlightedTabStyle : tabHeaderStyle;
+      chartCaseType == caseType ? highlightedTabStyle : tabHeaderStyle;
     const tabName = _getNameForSelectedTab(caseType);
 
     return (
       <View style={tabStyle}>
         <TouchableOpacity
           onPress={() => {
-            this.setState({ caseType });
+            setChartCaseType(caseType);
           }}
         >
-          <Text style={{ margin: 10 }}>{tabName}</Text>
+          <Text style={{ margin: 10, color: colors.text }}>{tabName}</Text>
         </TouchableOpacity>
       </View>
     );
   };
 
-  _showTabType = (caseType: CASE_TYPE) => {
-    const { dataSet, onDataSelected } = this.props;
-    const { isCumulative, didFinishAnimating } = this.state;
-    const { xAxisLabels = [], yAxisData = [] } = dataSet[this.state.caseType];
+  const _showTabType = (caseType: CASE_TYPE) => {
+    const { dataSet } = props;
+    const { xAxisLabels = [], yAxisData = [] } = dataSet[caseType];
 
     const title = _getNameForSelectedTab(caseType);
     const color = _getColorForSelectedTab(caseType);
@@ -93,15 +114,21 @@ export class CustomLineChart extends React.PureComponent<Props> {
     const yAggregated = getCumulativeArrayFor(yAxisData, isCumulative);
 
     const { filteredXArray, filteredYArray } = getDayFilteredValues(
-      this.state.chartSpan,
+      chartSpan,
       yAggregated,
       xAggregated
     );
 
     const hasData = filteredXArray.length > 0 || filteredXArray.length > 0;
     return (
-      <Card style={{ marginTop: '2%', marginBottom: '2%' }}>
-        <Card.Title title={title} />
+      <Card
+        style={{
+          marginTop: '2%',
+          marginBottom: '2%',
+          backgroundColor: colors.card,
+        }}
+      >
+        <Card.Title title={title} titleStyle={{ color: colors.text }} />
         <View
           style={{
             flexDirection: 'row',
@@ -111,12 +138,16 @@ export class CustomLineChart extends React.PureComponent<Props> {
             flex: 1,
           }}
         >
-          <Text style={{ padding: 10 }}>{'Individual'}</Text>
+          <Text style={{ padding: 10, color: colors.text }}>
+            {'Individual'}
+          </Text>
           <Switch
-            value={this.state.isCumulative}
-            onValueChange={this.toggleCumulativeDataSwitch}
+            value={isCumulative}
+            onValueChange={toggleCumulativeDataSwitch}
           />
-          <Text style={{ padding: 10 }}>{'Cumulative'}</Text>
+          <Text style={{ padding: 10, color: colors.text }}>
+            {'Cumulative'}
+          </Text>
         </View>
         {hasData && (
           <LineChart
@@ -141,79 +172,67 @@ export class CustomLineChart extends React.PureComponent<Props> {
             verticalLabelRotation={90}
             formatXLabel={(item) => item.substr(0, 6)}
             onDataPointClick={({ value, index, x, y }) => {
-              this.setState({
-                daySelected: filteredXArray[index],
-                valueSelected: filteredYArray[index],
-              });
+              setDaySelected(filteredXArray[index]),
+                setValueSelected(filteredYArray[index]);
             }}
             withVerticalLabels={false}
           />
         )}
 
-        {!!this.state.daySelected && (
+        {!!daySelected && (
           <View style={{ alignSelf: 'center', paddingBottom: 10 }}>
-            <Text>{`${this.state.valueSelected} ${title} on ${this.state.daySelected}`}</Text>
+            <Text style={{ color: colors.text }}>{`${toCommas(
+              valueSelected
+            )} ${title} on ${daySelected}`}</Text>
           </View>
         )}
-        {this._renderDaySpanToggleButton()}
+        {_renderDaySpanToggleButton()}
       </Card>
     );
   };
 
-  _renderTabs = () => {
-    return (
-      <View style={{ width: '100%' }}>
-        <View style={{ flexDirection: 'row', flex: 1 }}>
-          {this.renderTabHeader(CASE_TYPE.TOTAL_CONFIRMED)}
-          {this.renderTabHeader(CASE_TYPE.RECOVERED)}
-          {this.renderTabHeader(CASE_TYPE.DEATH)}
-        </View>
-        <View>{this._showTabType(this.state.caseType)}</View>
-      </View>
-    );
-  };
-
-  _renderDaySpanToggleButton = () => {
+  const _renderDaySpanToggleButton = () => {
     return (
       <View style={{ flexDirection: 'row' }}>
         <BackgroundColoredButton
           title={'Total'}
-          selected={this.state.chartSpan === TYPE.ALL}
-          onPress={() =>
-            this.setState({ chartSpan: TYPE.ALL, daySelected: '' })
-          }
+          selected={chartSpan === TYPE.ALL}
+          onPress={() => {
+            setChartSpan(TYPE.ALL);
+            setDaySelected('');
+          }}
         />
         <BackgroundColoredButton
           title={'Last 14 Days'}
-          selected={this.state.chartSpan === TYPE.FORTNIGHT}
-          onPress={() =>
-            this.setState({ chartSpan: TYPE.FORTNIGHT, daySelected: '' })
-          }
+          selected={chartSpan === TYPE.FORTNIGHT}
+          onPress={() => {
+            setChartSpan(TYPE.FORTNIGHT);
+            setDaySelected('');
+          }}
         />
         <BackgroundColoredButton
           title={'Last Month'}
-          selected={this.state.chartSpan === TYPE.MONTH}
-          onPress={() =>
-            this.setState({ chartSpan: TYPE.MONTH, daySelected: '' })
-          }
+          selected={chartSpan === TYPE.MONTH}
+          onPress={() => {
+            setChartSpan(TYPE.MONTH);
+            setDaySelected('');
+          }}
         />
       </View>
     );
   };
 
-  render() {
-    return (
-      <View style={{ width: '100%' }}>
-        <View style={{ flexDirection: 'row', flex: 1 }}>
-          {this.renderTabHeader(CASE_TYPE.TOTAL_CONFIRMED)}
-          {this.renderTabHeader(CASE_TYPE.RECOVERED)}
-          {this.renderTabHeader(CASE_TYPE.DEATH)}
-        </View>
-        <View>{this._showTabType(this.state.caseType)}</View>
+  return (
+    <View style={{ width: '100%' }}>
+      <View style={{ flexDirection: 'row', flex: 1 }}>
+        {renderTabHeader(CASE_TYPE.TOTAL_CONFIRMED)}
+        {renderTabHeader(CASE_TYPE.RECOVERED)}
+        {renderTabHeader(CASE_TYPE.DEATH)}
       </View>
-    );
-  }
-}
+      <View>{_showTabType(chartCaseType)}</View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

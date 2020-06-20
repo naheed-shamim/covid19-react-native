@@ -7,6 +7,7 @@ import { getOverallStatsAndTimeline } from '../../redux/actions/CovidIndiaAction
 import { CustomLineChart } from '../../common/components/Charts';
 
 import { Screens } from '../../navigation/Constants';
+import { WithTheme } from '../../common/hoc/WithTheme';
 
 class IndiaScreen extends React.Component {
   componentDidMount() {
@@ -14,6 +15,7 @@ class IndiaScreen extends React.Component {
   }
 
   _renderTables = (timeLineSeries) => {
+    const { themeColors } = this.props;
     let confirmedLabelArray: any[] = [];
     let confirmedArray: any[] = [];
     let deathsLabelArray: any[] = [];
@@ -53,7 +55,14 @@ class IndiaScreen extends React.Component {
     };
     return (
       <View style={styles.tableContainer}>
-        <Text style={{ fontSize: 26, fontWeight: 'bold', margin: '2%' }}>
+        <Text
+          style={{
+            fontSize: 26,
+            fontWeight: 'bold',
+            margin: '2%',
+            color: themeColors.text,
+          }}
+        >
           {'India Timeline'}
         </Text>
         <CustomLineChart
@@ -70,7 +79,10 @@ class IndiaScreen extends React.Component {
     const {
       totalCases: { lastupdatedtime = '' },
       timeLineSeries = [],
+      route,
+      themeColors,
     } = this.props;
+
     const {
       confirmed = '',
       deltaconfirmed = '',
@@ -82,23 +94,26 @@ class IndiaScreen extends React.Component {
 
     const lastUpdatedTime = formatDate(lastupdatedtime);
     return (
-      <ScrollView style={{ flex: 1 }}>
-        <View style={styles.mainContainer}>
-          <CovidStats
-            headerTitle='INDIA Covid'
-            headerColor={'tomato'}
-            totalConfirmed={confirmed}
-            newConfirmed={deltaconfirmed}
-            totalDeaths={deaths}
-            newDeaths={deltadeaths}
-            totalRecovered={recovered}
-            newRecovered={deltarecovered}
-            lastUpdatedTime={lastUpdatedTime}
-            onPress={() => this.props.navigation.navigate(Screens.STATE_DATA)}
-          />
+      <ScrollView
+        style={[
+          styles.mainContainer,
+          { backgroundColor: themeColors.background },
+        ]}
+      >
+        <CovidStats
+          headerTitle='INDIA Covid'
+          headerColor={'tomato'}
+          totalConfirmed={confirmed}
+          newConfirmed={deltaconfirmed}
+          totalDeaths={deaths}
+          newDeaths={deltadeaths}
+          totalRecovered={recovered}
+          newRecovered={deltarecovered}
+          lastUpdatedTime={lastUpdatedTime}
+          onPress={() => this.props.navigation.navigate(Screens.STATE_DATA)}
+        />
 
-          {this._renderTables(timeLineSeries)}
-        </View>
+        {this._renderTables(timeLineSeries)}
       </ScrollView>
     );
   }
@@ -118,10 +133,15 @@ const mapDispatchToProps = {
   getOverallStatsAndTimeline,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(IndiaScreen);
+const withThemedComponent = WithTheme(IndiaScreen);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withThemedComponent);
 
 const styles = StyleSheet.create({
-  mainContainer: { flex: 1, backgroundColor: 'white' },
+  mainContainer: { flex: 1 },
   tableContainer: {
     padding: '1%',
   },

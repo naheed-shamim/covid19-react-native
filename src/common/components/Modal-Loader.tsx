@@ -1,13 +1,22 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Modal, ActivityIndicator } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 
 const Loader = (props) => {
-  const { loading, ...attributes } = props;
+  const { colors } = useTheme();
+  const { loading } = props;
   return (
     <Modal transparent={true} animationType={'none'} visible={loading}>
-      <View style={styles.modalBackground}>
-        <View style={styles.activityIndicatorWrapper}>
-          <ActivityIndicator animating={loading} />
+      <View
+        style={[styles.modalBackground, { backgroundColor: colors.background }]}
+      >
+        <View
+          style={[
+            styles.activityIndicatorWrapper,
+            { backgroundColor: colors.card },
+          ]}
+        >
+          <ActivityIndicator animating={loading} color={colors.primary} />
         </View>
       </View>
     </Modal>
@@ -20,7 +29,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'space-around',
-    backgroundColor: '#00000040',
+    backgroundColor: 'grey',
+    opacity: 0.9,
   },
   activityIndicatorWrapper: {
     backgroundColor: '#FFFFFF',

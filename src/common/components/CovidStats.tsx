@@ -4,10 +4,11 @@ import {
   MemoizedLastUpdatedTime,
   MemoizedTotalAndNewCases,
 } from './CommonElements';
-import { Card, Divider } from 'react-native-paper';
+import { Surface, Divider } from 'react-native-paper';
 import { AntDesign } from '@expo/vector-icons';
 import { CustomProgressCircle } from './CustomProgressCircle';
 import { getPercentage } from '../../utils/CommonUtils';
+import { useTheme } from '@react-navigation/native';
 
 export const CovidStats = (props) => {
   const {
@@ -34,10 +35,12 @@ export const CovidStats = (props) => {
   };
 
   const showStats = () => {
+    const { colors } = useTheme();
+
     const { deathPercentage, recoveryPercentage } = getPercentageStats();
     return (
       <View>
-        <Card elevation={5} style={styles.horizontalCardStyle}>
+        <Surface style={styles.horizontalCardStyle}>
           <TouchableOpacity
             onPress={onPress}
             style={{
@@ -45,9 +48,12 @@ export const CovidStats = (props) => {
               justifyContent: 'space-around',
               alignItems: 'center',
               padding: 20,
+              backgroundColor: colors.card,
             }}
           >
-            <Text style={styles.statsLabelStyle}>{'Total Confirmed'}</Text>
+            <Text style={[styles.statsLabelStyle, { color: colors.text }]}>
+              {'Total Confirmed'}
+            </Text>
             <MemoizedTotalAndNewCases
               totalCases={totalConfirmed}
               newCases={newConfirmed}
@@ -55,12 +61,16 @@ export const CovidStats = (props) => {
             />
             <AntDesign name='right' size={10} color='black' />
           </TouchableOpacity>
-        </Card>
+        </Surface>
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-          <Card elevation={3} style={styles.squareCardStyle}>
+          <Surface
+            style={[styles.squareCardStyle, { backgroundColor: colors.card }]}
+          >
             <View style={styles.squareCardContainerStyle}>
-              <Text style={[styles.statsLabelStyle]}>{'Total Deaths'}</Text>
+              <Text style={[styles.statsLabelStyle, { color: colors.text }]}>
+                {'Total Deaths'}
+              </Text>
               <CustomProgressCircle percent={deathPercentage} color={'red'} />
               <MemoizedTotalAndNewCases
                 totalCases={totalDeaths}
@@ -68,10 +78,14 @@ export const CovidStats = (props) => {
                 color='grey'
               />
             </View>
-          </Card>
-          <Card elevation={3} style={styles.squareCardStyle}>
-            <View style={styles.squareCardContainerStyle}>
-              <Text style={styles.statsLabelStyle}>{'Total Recovered'}</Text>
+          </Surface>
+          <Surface
+            style={[styles.squareCardStyle, { backgroundColor: colors.card }]}
+          >
+            <View style={[styles.squareCardContainerStyle]}>
+              <Text style={[styles.statsLabelStyle, { color: colors.text }]}>
+                {'Total Recovered'}
+              </Text>
               <CustomProgressCircle
                 percent={recoveryPercentage}
                 color={'green'}
@@ -82,7 +96,7 @@ export const CovidStats = (props) => {
                 color='green'
               />
             </View>
-          </Card>
+          </Surface>
         </View>
         <MemoizedLastUpdatedTime lastUpdatedTime={lastUpdatedTime} />
         <Divider style={{ margin: '5%' }} />
@@ -120,7 +134,7 @@ const styles = StyleSheet.create({
   },
   horizontalCardStyle: {
     margin: '5%',
-    // padding: '5%',
+    elevation: 5,
   },
   squareCardStyle: {
     flex: 1,

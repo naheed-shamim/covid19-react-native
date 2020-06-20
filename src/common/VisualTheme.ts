@@ -6,13 +6,13 @@ export const Theme = {
   PRIMARY_ACCENT: 'blue',
 }
 
-
-export default StyleSheet.create({
-  droidSafeArea: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-})
+export default StyleSheet.create(
+  {
+    droidSafeArea: {
+      flex: 1,
+      backgroundColor: 'white',
+    },
+  })
 
 export const Colors = {
 

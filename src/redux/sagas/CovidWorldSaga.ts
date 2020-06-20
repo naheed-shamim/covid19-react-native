@@ -19,7 +19,7 @@ export function* fetchWorldSummary() {
     }
     catch (error) {
         const errorMsg = handleError(error)
-        console.log(errorMsg)
+
         showShortToast(errorMsg)
         yield put({ type: actionTypes.WORLD_SUMMARY_FAILED, payload: errorMsg })
         yield put(endLoading())

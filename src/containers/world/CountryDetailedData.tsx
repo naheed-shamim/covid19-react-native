@@ -3,47 +3,22 @@ import { View, Image, Text, StyleSheet, ScrollView } from 'react-native';
 import { FLAG_URL } from '../../service/ApiConstants';
 import { CaseSummary } from '../../common/components/CaseSummary';
 import { Card } from 'react-native-paper';
+import { WithTheme } from '../../common/hoc/WithTheme';
 
-export default class CountryDetailedData extends React.PureComponent {
-  componentDidMount() {
-    const { params } = this.props.route;
-    console.log(params);
-  }
-
+class CountryDetailedData extends React.PureComponent {
   _renderHeader = () => {
-    const { CountryCode, Country } = this.props.route.params.country;
+    const { CountryCode } = this.props.route.params.country;
+
     const flagURL = FLAG_URL(CountryCode, 64);
     return (
       <View style={{ alignItems: 'center' }}>
-        <Image
-          source={{ uri: flagURL }}
-          style={{ height: 84, aspectRatio: 1 }}
-        />
-        <Text>{Country}</Text>
+        <Image source={{ uri: flagURL }} style={{ height: 84, width: 84 }} />
       </View>
     );
   };
 
-  _renderComparisonStats = () => {
-    const { country, total } = this.props.route.params;
-    const percent = Number(
-      (country.TotalConfirmed / total.TotalConfirmed) * 100
-    ).toFixed(2);
-    return (
-      <Card style={{ margin: '2%' }}>
-        <View style={{ alignItems: 'center', flex: 1, padding: '3%' }}>
-          <Text style={[styles.enlargedText, { color: 'red' }]}>
-            {percent}%
-          </Text>
-          <Text style={{ flex: 1, textAlign: 'center' }}>
-            of total confirmed cases from India
-          </Text>
-        </View>
-      </Card>
-    );
-  };
-
   _renderPercentageStates = () => {
+    const { themeColors } = this.props;
     const { country, total } = this.props.route.params;
 
     const deathPercent = Number(
@@ -57,14 +32,22 @@ export default class CountryDetailedData extends React.PureComponent {
       (country.TotalConfirmed / total.TotalConfirmed) * 100
     ).toFixed(2);
 
+    const labelStyle = [styles.labelStyle, { color: themeColors.text }];
+
     return (
-      <Card style={{ margin: 20 }}>
+      <Card style={{ margin: 20, backgroundColor: themeColors.card }}>
         <View style={{ alignItems: 'center', flex: 1, padding: '3%' }}>
-          <Text>{country.Country} has </Text>
+          <Text style={labelStyle}>{country.Country} has </Text>
           <Text style={[styles.enlargedText, { color: 'red' }]}>
             {relativePercent}%
           </Text>
-          <Text style={{ flex: 1, textAlign: 'center' }}>
+          <Text
+            style={{
+              flex: 1,
+              textAlign: 'center',
+              color: themeColors.text,
+            }}
+          >
             of total confirmed cases globally
           </Text>
         </View>
@@ -73,13 +56,13 @@ export default class CountryDetailedData extends React.PureComponent {
             <Text style={[styles.enlargedText, { color: 'green' }]}>
               {recoveryPercent}%
             </Text>
-            <Text>{'Recovery Percentage'}</Text>
+            <Text style={labelStyle}>{'Recovery Percentage'}</Text>
           </View>
           <View style={{ flex: 1, margin: '2%', alignItems: 'center' }}>
             <Text style={[styles.enlargedText, { color: 'grey' }]}>
               {deathPercent}%
             </Text>
-            <Text>{'Death Percentage'}</Text>
+            <Text style={labelStyle}>{'Death Percentage'}</Text>
           </View>
         </View>
       </Card>
@@ -121,4 +104,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
+  labelStyle: {
+    fontSize: 14,
+  },
 });
+
+const withThemedComponent = WithTheme(CountryDetailedData);
+
+export default withThemedComponent;
