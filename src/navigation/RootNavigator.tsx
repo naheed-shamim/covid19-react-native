@@ -191,7 +191,6 @@ const RootDrawerNavigator = (props) => {
 
 const RootNavigator = () => {
   const scheme = useColorScheme();
-  const { colors } = useTheme();
 
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
 
@@ -210,16 +209,18 @@ const RootNavigator = () => {
 
   // const selectedTheme = isDarkTheme ? CustomDarkTheme : DefaultTheme;
   const selectedTheme = scheme == 'dark' ? CustomDarkTheme : DefaultTheme;
+  const safeAreaStyle = [
+    VisualTheme.droidSafeArea,
+    { backgroundColor: selectedTheme.colors.background },
+  ];
 
   return (
     <AppearanceProvider>
-      <NavigationContainer theme={selectedTheme}>
-        <SafeAreaView
-          style={[VisualTheme.droidSafeArea, { backgroundColor: colors.card }]}
-        >
+      <SafeAreaView style={safeAreaStyle}>
+        <NavigationContainer theme={selectedTheme}>
           <RootDrawerNavigator toggleTheme={toggleTheme} />
-        </SafeAreaView>
-      </NavigationContainer>
+        </NavigationContainer>
+      </SafeAreaView>
     </AppearanceProvider>
   );
 };

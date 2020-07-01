@@ -13,7 +13,6 @@ import { ReduxStore } from './src/redux/ReduxStore';
 import VisualTheme from './src/common/VisualTheme';
 
 export default function App() {
-
   return (
     <Provider store={ReduxStore}>
       <RootNavigator />

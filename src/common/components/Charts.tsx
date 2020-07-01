@@ -37,7 +37,7 @@ interface Props {
   title: string;
   cumulative: boolean;
   color: string;
-  dataSet: [];
+  dataSet: Array<{ xAxisLabels: Array<number>; yAxisData: Array<number> }>;
 }
 
 //TODO: Clear on change values total cases
@@ -105,6 +105,7 @@ export const CustomLineChart = (props: Props) => {
 
   const _showTabType = (caseType: CASE_TYPE) => {
     const { dataSet } = props;
+
     const { xAxisLabels = [], yAxisData = [] } = dataSet[caseType];
 
     const title = _getNameForSelectedTab(caseType);
@@ -296,21 +297,3 @@ const _getColorForSelectedTab = (caseType: CASE_TYPE): string => {
       return 'grey';
   }
 };
-
-const chartConfig = (primaryColor: string) => ({
-  backgroundColor: '#fff',
-  backgroundGradientFrom: '#fff',
-  backgroundGradientTo: '#fff',
-  decimalPlaces: 0, // optional, defaults to 2dp
-  color: () => `${primaryColor}`,
-  // color: (opacity = 1) => `255, 0, 0, ${opacity})`,
-  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-  style: {
-    borderRadius: 1,
-  },
-  propsForDots: {
-    r: '2',
-    strokeWidth: '1',
-    stroke: `${primaryColor}`,
-  },
-});

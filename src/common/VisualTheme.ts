@@ -10,8 +10,8 @@ export default StyleSheet.create(
   {
     droidSafeArea: {
       flex: 1,
-      backgroundColor: 'white',
     },
+
   })
 
 export const Colors = {
@@ -20,6 +20,13 @@ export const Colors = {
   black: '#000000',
   tableGrey: '#f2f2f2',
   lightRed: 'tomato',
+
+  ACTIVE: 'blue',
+  CONFIRMED: 'red',
+  DECEASED: 'grey',
+  RECOVERED: 'green',
+
+  MAROON: 'rgb(200, 55, 108)'
 
 }
 

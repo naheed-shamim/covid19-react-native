@@ -18,7 +18,7 @@ export const StackHeader = ({ scene, previous, navigation }) => {
   return (
     <Appbar.Header theme={{ colors: { primary: colors.card } }}>
       {menuIcon(previous, navigation)}
-      <Appbar.Content title={title} titleStyle={{ color: colors.text }} />
+      <Appbar.Content title={title} titleStyle={{ color: colors.primary }} />
     </Appbar.Header>
   );
 };
@@ -35,7 +35,12 @@ const menuIcon = (isPrevious, navigation) => {
         tintColor: colors.primary,
       }}
     />
-  ) : null;
+  ) : (
+    <Image
+      source={icons.menu}
+      style={{ height: 40, width: 40, tintColor: 'transparent' }}
+    />
+  );
 
   const iconAction = () =>
     isPrevious ? navigation.pop() : navigation.openDrawer();

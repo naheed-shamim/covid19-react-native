@@ -1,10 +1,23 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { toCommas } from '../../utils/CommonUtils';
 import { useTheme } from '@react-navigation/native';
+import { Colors } from '../VisualTheme';
 
-export const CaseSummary = (props) => {
+interface CaseSummaryProps {
+  active: number | string;
+  confirmed: number | string;
+  deltaConfirmed: number | string;
+  recovered: number | string;
+  deltaRecovered: number | string;
+  deaths: number | string;
+  deltaDeaths: number | string;
+}
+
+const ICON_SIZE = 24;
+
+export const CaseSummary = (props: CaseSummaryProps) => {
   const { colors } = useTheme();
   const {
     active,
@@ -25,7 +38,11 @@ export const CaseSummary = (props) => {
     <View>
       <View style={{ flexDirection: 'row' }}>
         <View style={cardContainerStyle}>
-          <FontAwesome name='line-chart' size={24} color='#ff0089' />
+          <FontAwesome
+            name='line-chart'
+            size={ICON_SIZE}
+            color={Colors.CONFIRMED}
+          />
           <Text style={[styles.subStats, { color: colors.text }]}>
             {toCommas(deltaConfirmed)}
           </Text>
@@ -35,7 +52,11 @@ export const CaseSummary = (props) => {
           <Text style={[styles.label, { color: colors.text }]}>Confirmed</Text>
         </View>
         <View style={cardContainerStyle}>
-          <FontAwesome5 name='heartbeat' size={24} color='blue' />
+          <FontAwesome5
+            name='heartbeat'
+            size={ICON_SIZE}
+            color={Colors.ACTIVE}
+          />
           <Text style={[styles.subStats, { color: colors.text }]}>{''}</Text>
           <Text style={[styles.stats, { color: colors.text }]}>
             {toCommas(active)}
@@ -45,19 +66,21 @@ export const CaseSummary = (props) => {
       </View>
       <View style={{ flexDirection: 'row' }}>
         <View style={cardContainerStyle}>
-          <FontAwesome5 name='notes-medical' size={24} color='green' />
+          <FontAwesome5
+            name='notes-medical'
+            size={ICON_SIZE}
+            color={Colors.RECOVERED}
+          />
           <Text style={(styles.subStats, { color: colors.text })}>
             {toCommas(deltaRecovered)}
           </Text>
-          <Text style={[styles.stats, , { color: colors.text }]}>
+          <Text style={[styles.stats, { color: colors.text }]}>
             {toCommas(recovered)}
           </Text>
-          <Text style={[styles.label, , { color: colors.text }]}>
-            Recovered
-          </Text>
+          <Text style={[styles.label, { color: colors.text }]}>Recovered</Text>
         </View>
         <View style={cardContainerStyle}>
-          <Ionicons name='ios-rose' size={24} color='maroon' />
+          <Ionicons name='ios-rose' size={ICON_SIZE} color={Colors.MAROON} />
           <Text style={[styles.subStats, { color: colors.text }]}>
             {toCommas(deltaDeaths)}
           </Text>
@@ -82,7 +105,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   image: { width: 30, height: 30 },
-  label: {},
+  label: { fontSize: 12 },
   stats: { fontWeight: 'bold', fontSize: 16, marginBottom: 5 },
   subStats: { fontSize: 12, marginTop: 10 },
 });
