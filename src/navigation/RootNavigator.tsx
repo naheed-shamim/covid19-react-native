@@ -211,7 +211,7 @@ const RootNavigator = () => {
   const selectedTheme = scheme == 'dark' ? CustomDarkTheme : DefaultTheme;
   const safeAreaStyle = [
     VisualTheme.droidSafeArea,
-    { backgroundColor: selectedTheme.colors.background },
+    { backgroundColor: selectedTheme.colors.card },
   ];
 
   return (
