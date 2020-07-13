@@ -10,8 +10,9 @@ import {
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { toCommas } from '../../utils/CommonUtils';
-import { Card } from 'react-native-paper';
+import { Card, Divider } from 'react-native-paper';
 import { useTheme } from '@react-navigation/native';
+import { CountryFlag } from './Common';
 
 const expandIcon = require('../../../assets/expand-more.png');
 
@@ -45,44 +46,8 @@ export const HorizontalRowItem = React.memo((props: Props) => {
 
   const { colors } = useTheme();
 
-  // const spinValue = new Animated.Value(0);
-
-  // // First set up animation
-  // const animation = Animated.timing(spinValue, {
-  //   toValue: 1,
-  //   duration: 100,
-  //   easing: Easing.linear,
-  //   useNativeDriver: true, // To make use of native driver for performance
-  // });
-
-  // onPress && animation.start();
-
-  // const outputAngleRange = selected ? ['0deg', '90deg'] : ['90deg', '0deg'];
-  // const spin = spinValue.interpolate({
-  //   inputRange: [0, 1],
-  //   outputRange: outputAngleRange,
-  // });
-
-  const getFlagImage = (countryCode: string) => {
-    const flagSource = `https://www.countryflags.io/${countryCode}/flat/16.png`;
-    return (
-      <Image
-        style={{ height: 25, width: 25, marginHorizontal: '1%' }}
-        source={{ uri: flagSource }}
-      />
-    );
-  };
-
-  const animatedImage = () => {
-    return (
-      <Image
-        source={expandIcon}
-        // style={{ transform: [{ rotate: spin }] }}
-      />
-    );
-  };
-  const displayImage = countryOrStateCode
-    ? getFlagImage(countryOrStateCode)
+  const flagImage = countryOrStateCode
+    ? <CountryFlag countryCode={countryOrStateCode} />
     : null;
 
   const showSerialNum = () => {
@@ -91,7 +56,7 @@ export const HorizontalRowItem = React.memo((props: Props) => {
         <Text
           style={[
             styles.stateNameTxt,
-            { flex: 0, paddingHorizontal: '1%', color: colors.text },
+            { flex: 0, paddingHorizontal: '1%', color: colors.text, fontSize: 12 },
           ]}
         >
           {serialNum}.
@@ -105,41 +70,56 @@ export const HorizontalRowItem = React.memo((props: Props) => {
       <Card elevation={3} style={{ margin: 5, backgroundColor: colors.card }}>
         <View style={styles.stateContainer}>
           {showSerialNum()}
-          {displayImage}
-          <Text style={[styles.stateNameTxt, { color: colors.text }]}>
-            {state}
-          </Text>
-          <NewAndTotalCaseView
-            totalCases={confirmed}
-            newCases={deltaconfirmed}
-            deltaColor={'red'}
-            showNewCases={showDailyInfo}
-          />
-          <NewAndTotalCaseView
-            totalCases={recovered}
-            newCases={deltarecovered}
-            deltaColor={'green'}
-            showNewCases={showDailyInfo}
-          />
-          <NewAndTotalCaseView
-            totalCases={deaths}
-            newCases={deltadeaths}
-            deltaColor={'grey'}
-            showNewCases={showDailyInfo}
-          />
+          {flagImage}
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.stateNameTxt, { color: colors.text, alignSelf: 'center' }]}>
+              {state}
+            </Text>
+            <View style={{ height: 1, backgroundColor: 'grey', margin: '2%' }} />
+            <View style={{ flexDirection: 'row' }}>
+              <ConsolidatedCaseView
+                label={'Confimred'}
+                totalCases={confirmed}
+                newCases={deltaconfirmed}
+                deltaColor={'red'}
+                showNewCases={showDailyInfo}
+              />
+              <ConsolidatedCaseView
+                label={'Recovered'}
+                totalCases={recovered}
+                newCases={deltarecovered}
+                deltaColor={'green'}
+                showNewCases={showDailyInfo}
+              />
+              <ConsolidatedCaseView
+                label={'Deaths'}
+                totalCases={deaths}
+                newCases={deltadeaths}
+                deltaColor={'grey'}
+                showNewCases={showDailyInfo}
+              />
+            </View>
+          </View>
         </View>
       </Card>
-    </TouchableWithoutFeedback>
+    </TouchableWithoutFeedback >
   );
 });
 
-const NewAndTotalCaseView = React.memo((props) => {
+/******************** Consolidate Card View ********************/
+interface ConsolidateCaseViewProps {
+  label: string,
+  totalCases: string, newCases: string, deltaColor: string, showNewCases: boolean
+}
+
+const ConsolidatedCaseView = React.memo((props: ConsolidateCaseViewProps) => {
   const { colors } = useTheme();
 
-  const { totalCases, newCases, deltaColor, showNewCases } = props;
+  const { label, totalCases, newCases, deltaColor, showNewCases } = props;
 
   return (
     <View style={styles.stateNumberContainer}>
+      <Text numberOfLines={2} style={{ textAlign: 'center' }}>{label}</Text>
       {showNewCases && (
         <NewCasesView newCases={newCases} deltaColor={deltaColor} />
       )}
@@ -151,7 +131,13 @@ const NewAndTotalCaseView = React.memo((props) => {
   );
 });
 
-const NewCasesView = React.memo((props) => {
+
+/******************** Consolidate New Cases View ********************/
+interface NewCasesViewProps {
+  newCases: string, deltaColor: string
+}
+
+const NewCasesView = React.memo((props: NewCasesViewProps) => {
   const { newCases, deltaColor } = props;
   return (
     <View
@@ -173,16 +159,13 @@ const NewCasesView = React.memo((props) => {
 const styles = StyleSheet.create({
   stateContainer: {
     flex: 1,
-    // borderRadius: 5,
-    // borderWidth: 1,
-    // borderColor: 'black',
     marginVertical: 3,
     margin: 8,
     padding: 8,
     flexDirection: 'row',
     alignItems: 'center',
   },
-  stateNameTxt: { fontSize: 12, fontWeight: 'bold', flex: 2 },
+  stateNameTxt: { fontSize: 20, fontWeight: 'bold', flex: 1, paddingHorizontal: '5%' },
   stateNumberContainer: {
     flex: 1,
     alignItems: 'center',
@@ -195,3 +178,32 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
+
+
+
+// ------ Remove COde ----
+const animatedImage = () => {
+  return (
+    <Image
+      source={expandIcon}
+    // style={{ transform: [{ rotate: spin }] }}
+    />
+  );
+};
+  // const spinValue = new Animated.Value(0);
+
+  // // First set up animation
+  // const animation = Animated.timing(spinValue, {
+  //   toValue: 1,
+  //   duration: 100,
+  //   easing: Easing.linear,
+  //   useNativeDriver: true, // To make use of native driver for performance
+  // });
+
+  // onPress && animation.start();
+
+  // const outputAngleRange = selected ? ['0deg', '90deg'] : ['90deg', '0deg'];
+  // const spin = spinValue.interpolate({
+  //   inputRange: [0, 1],
+  //   outputRange: outputAngleRange,
+  // });
