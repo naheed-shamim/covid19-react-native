@@ -112,7 +112,7 @@ class CountriesList extends React.PureComponent {
       <View style={{ flex: 1, backgroundColor: themeColors.background }}>
         {this._showSearchBar()}
         <FlatList
-          ListHeaderComponent={showHeaders}
+          // ListHeaderComponent={showHeaders}
           data={countryList}
           renderItem={({ item, index }) => (
             <HorizontalRowItem
