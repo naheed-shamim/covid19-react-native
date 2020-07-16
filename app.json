@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "covid-19-india-rn",
+    "slug": "covid-19-india-rn",
+    "platforms": [
+      "ios",
+      "android",
+    ],
+    "userInterfaceStyle": "automatic",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "userInterfaceStyle": "automatic",
+      "bundleIdentifier": "com.imageneStudios.covidapp",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "userInterfaceStyle": "automatic",
+      "package": "com.imageneStudios.covidapp",
+      "versionCode": 1
+    },
+    "description": "Theme Fixed"
+  }
+}
