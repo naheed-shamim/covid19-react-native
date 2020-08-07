@@ -1,18 +1,27 @@
 import React from 'react';
-import { FlatList, View, InteractionManager, Text } from 'react-native';
+import {
+  FlatList,
+  InteractionManager,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import { connect } from 'react-redux';
-import { HorizontalRowItem } from '../../common/components/HorizontalRowItem';
-import BaseComponent from '../BaseComponent';
-import { getStateDistrictStats } from '../../redux/actions/CovidIndiaActions';
-import { Searchbar } from 'react-native-paper';
 import {
   FlatListHeader,
   showLoader,
 } from '../../common/components/CommonElements';
-import { sortArrayBy } from '../../utils/CommonUtils';
-import { Screens } from '../../navigation/Constants';
+import { HorizontalRowItem } from '../../common/components/HorizontalRowItem';
 import { SearchBar } from '../../common/components/Searchbar';
+import TextPicker from '../../common/components/TextPicker';
 import { WithTheme } from '../../common/hoc/WithTheme';
+import { Screens } from '../../navigation/Constants';
+import { getStateDistrictStats } from '../../redux/actions/CovidIndiaActions';
+import { sortArrayBy } from '../../utils/CommonUtils';
+import BaseComponent from '../BaseComponent';
+import { icons } from '../../constants/Constants';
+import CommonSort, { SortOptions } from '../../common/components/CommonSort';
 
 class StateWiseList extends BaseComponent {
   stateHolder: any;
@@ -104,6 +113,68 @@ class StateWiseList extends BaseComponent {
     this.setState({ stateList: newData });
   };
 
+  _renderSortView = () => {
+    return (
+      <CommonSort
+        handleSortSelection={(selection) =>
+          this._handleSortSelection(selection)
+        }
+      />
+    );
+  };
+
+  _handleSortSelection = (comparatorField) => {
+    let sortedCountryList = this.state.stateList;
+
+    let ascendingSort = false;
+    if (this.state.selectedComparator == comparatorField) {
+      ascendingSort = !ascendingSort;
+    }
+
+    switch (comparatorField) {
+      case SortOptions.Name:
+        sortedCountryList = sortArrayBy(
+          this.state.stateList,
+          'state',
+          !ascendingSort
+        );
+        break;
+      case SortOptions.Confirmed:
+        sortedCountryList = sortArrayBy(
+          this.state.stateList,
+          'confirmed',
+          ascendingSort
+        );
+        break;
+      case SortOptions.Deaths:
+        sortedCountryList = sortArrayBy(
+          this.state.stateList,
+          'deaths',
+          ascendingSort
+        );
+        break;
+      case SortOptions.Recovered:
+        sortedCountryList = sortArrayBy(
+          this.state.stateList,
+          'recovered',
+          ascendingSort
+        );
+        break;
+      default:
+        sortedCountryList = sortArrayBy(
+          this.state.stateList,
+          'state',
+          ascendingSort
+        );
+    }
+    this.setState({
+      stateList: sortedCountryList,
+      selectedComparator: comparatorField,
+      isAscending: true,
+    });
+    this.stateHolder = sortedCountryList;
+  };
+
   _renderFlatList = () => {
     const { stateDistrictWiseData = {}, route, themeColors } = this.props;
     const { stateList = [] } = this.state;
@@ -114,18 +185,15 @@ class StateWiseList extends BaseComponent {
         onPress={(comparator: string) => this._handleSort(comparator)}
       />
     );
+
     return (
       <View style={{ flex: 1, backgroundColor: themeColors.background }}>
         {this._showSearchBar()}
-        {/* {showHeaders} */}
+        {this._renderSortView()}
         <FlatList
-          ListHeaderComponent={showHeaders}
+          // ListHeaderComponent={showHeaders}
           data={stateList}
           renderItem={({ item, index }) => (
-            // <CollapsibleRowItem
-            //   overallStateData={item}
-            //   districtDetails={stateDistrictWiseData[item.state]}
-            // />
             <HorizontalRowItem
               serialNum={index + 1}
               overallData={item}
@@ -191,12 +259,23 @@ class StateWiseList extends BaseComponent {
 
   render() {
     const { didFinishAnimating } = this.state;
+    const options = ['Sort by cc', 'ccasds'];
 
     const view = didFinishAnimating
       ? this._renderFlatList()
       : this._showLoader(didFinishAnimating);
 
-    return <View style={{ flex: 1, backgroundColor: 'white' }}>{view}</View>;
+    return (
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <TextPicker
+          ref={'picker'}
+          shouldOverlayDismiss={false}
+          options={options}
+          onSubmit={(value) => this._handleSortSelection(value)}
+        />
+        {view}
+      </View>
+    );
   }
 }
 

@@ -4,5 +4,4 @@ export const strings = {
     confirmed: 'Confirmed',
     totalConfirmed: 'Total Confirmed',
     refreshData: 'Refresh Data'
-
 }

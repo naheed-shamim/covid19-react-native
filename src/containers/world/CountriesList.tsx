@@ -11,6 +11,7 @@ import { Screens } from '../../navigation/Constants';
 import { sortArrayBy } from '../../utils/CommonUtils';
 import { SearchBar } from '../../common/components/Searchbar';
 import { WithTheme } from '../../common/hoc/WithTheme';
+import CommonSort, { SortOptions } from '../../common/components/CommonSort';
 
 class CountriesList extends React.PureComponent {
   countriesHolder: any;
@@ -35,34 +36,34 @@ class CountriesList extends React.PureComponent {
   _handleSort = (comparatorField: string) => {
     let sortedCountryList = this.state.countryList;
 
-    let ascendingSort = this.state.isAscending;
+    let ascendingSort = false;
     if (this.state.selectedComparator == comparatorField) {
-      ascendingSort = !ascendingSort;
+      // ascendingSort = !ascendingSort;
     }
 
     switch (comparatorField) {
-      case 'title':
+      case SortOptions.Name:
         sortedCountryList = sortArrayBy(
           this.state.countryList,
           'Country',
           !ascendingSort
         );
         break;
-      case 'confirmed':
+      case SortOptions.Confirmed:
         sortedCountryList = sortArrayBy(
           this.state.countryList,
           'TotalConfirmed',
           ascendingSort
         );
         break;
-      case 'deaths':
+      case SortOptions.Deaths:
         sortedCountryList = sortArrayBy(
           this.state.countryList,
           'TotalDeaths',
           ascendingSort
         );
         break;
-      case 'recovered':
+      case SortOptions.Recovered:
         sortedCountryList = sortArrayBy(
           this.state.countryList,
           'TotalRecovered',
@@ -111,6 +112,9 @@ class CountriesList extends React.PureComponent {
     return (
       <View style={{ flex: 1, backgroundColor: themeColors.background }}>
         {this._showSearchBar()}
+        <CommonSort
+          handleSortSelection={(selection) => this._handleSort(selection)}
+        />
         <FlatList
           // ListHeaderComponent={showHeaders}
           data={countryList}
