@@ -75,7 +75,7 @@ export const HorizontalRowItem = React.memo((props: Props) => {
             <Text style={[styles.stateNameTxt, { color: colors.text, alignSelf: 'center' }]}>
               {state}
             </Text>
-            <View style={{ height: 1, backgroundColor: 'grey', margin: '2%' }} />
+            <View style={{ height: 1, backgroundColor: '#dcdcdc', margin: '2%' }} />
             <View style={{ flexDirection: 'row' }}>
               <ConsolidatedCaseView
                 label={'Confimred'}
