@@ -1,7 +1,6 @@
-import React from 'react';
-import { View, TextInput } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { color } from 'react-native-reanimated';
+import React from 'react';
+import { TextInput, View } from 'react-native';
 
 interface SearchBarProps {
   onChangeText: any;
@@ -19,14 +18,14 @@ export const SearchBar = (props: SearchBarProps) => {
         padding: 1,
         margin: 10,
         backgroundColor: colors.card,
-        borderColor: colors.text,
+        borderColor: colors.card,
       }}
     >
       <TextInput
         style={{
           // backgroundColor: 'white',
           padding: 10,
-          fontSize: 12,
+          fontSize: 14,
           color: colors.text,
         }}
         onChangeText={(text) => onChangeText(text)}

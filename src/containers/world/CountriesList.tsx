@@ -1,16 +1,16 @@
 import React from 'react';
-import { FlatList, View, InteractionManager, Text } from 'react-native';
+import { FlatList, InteractionManager, View } from 'react-native';
 import { connect } from 'react-redux';
-import { RecyclerListView } from 'recyclerlistview';
 import {
   FlatListHeader,
-  showLoader,
+  showLoader
 } from '../../common/components/CommonElements';
+import CommonSort, { SortOptions } from '../../common/components/CommonSort';
 import { HorizontalRowItem } from '../../common/components/HorizontalRowItem';
-import { Screens } from '../../navigation/Constants';
-import { sortArrayBy } from '../../utils/CommonUtils';
 import { SearchBar } from '../../common/components/Searchbar';
 import { WithTheme } from '../../common/hoc/WithTheme';
+import { Screens } from '../../navigation/Constants';
+import { sortArrayBy } from '../../utils/CommonUtils';
 
 class CountriesList extends React.PureComponent {
   countriesHolder: any;
@@ -23,7 +23,7 @@ class CountriesList extends React.PureComponent {
     sortBy: null,
     isAscending: false,
     countryList: this.props.countries,
-    selectedComparator: 'title',
+    selectedComparator: SortOptions.Name,
   };
 
   componentDidMount() {
@@ -32,54 +32,49 @@ class CountriesList extends React.PureComponent {
     });
   }
 
-  _handleSort = (comparatorField: string) => {
+  _handleSort = (comparatorField: string, ascending: boolean = false) => {
     let sortedCountryList = this.state.countryList;
 
-    let ascendingSort = this.state.isAscending;
-    if (this.state.selectedComparator == comparatorField) {
-      ascendingSort = !ascendingSort;
-    }
-
     switch (comparatorField) {
-      case 'title':
+      case SortOptions.Name:
         sortedCountryList = sortArrayBy(
           this.state.countryList,
           'Country',
-          !ascendingSort
+          ascending
         );
         break;
-      case 'confirmed':
+      case SortOptions.Confirmed:
         sortedCountryList = sortArrayBy(
           this.state.countryList,
           'TotalConfirmed',
-          ascendingSort
+          ascending
         );
         break;
-      case 'deaths':
+      case SortOptions.Deaths:
         sortedCountryList = sortArrayBy(
           this.state.countryList,
           'TotalDeaths',
-          ascendingSort
+          ascending
         );
         break;
-      case 'recovered':
+      case SortOptions.Recovered:
         sortedCountryList = sortArrayBy(
           this.state.countryList,
           'TotalRecovered',
-          ascendingSort
+          ascending
         );
         break;
       default:
         sortedCountryList = sortArrayBy(
           this.state.countryList,
           'Country',
-          ascendingSort
+          ascending
         );
     }
     this.setState({
       countryList: sortedCountryList,
       selectedComparator: comparatorField,
-      isAscending: ascendingSort,
+      isAscending: ascending,
     });
   };
 
@@ -111,6 +106,16 @@ class CountriesList extends React.PureComponent {
     return (
       <View style={{ flex: 1, backgroundColor: themeColors.background }}>
         {this._showSearchBar()}
+        <CommonSort
+          themeColors={this.props.themeColors}
+          defaultValue={this.state.selectedComparator}
+          isAscending={this.state.isAscending}
+          handleSortSelection={(selection) => this._handleSort(selection)}
+          onComparatorSelection={selection => {
+            this.setState({ isAscending: selection }),
+              this._handleSort(this.state.selectedComparator, selection)
+          }}
+        />
         <FlatList
           // ListHeaderComponent={showHeaders}
           data={countryList}

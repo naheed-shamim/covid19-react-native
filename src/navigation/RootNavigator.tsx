@@ -1,30 +1,31 @@
-import React from 'react';
-import { Text, SafeAreaView } from 'react-native';
-import { useColorScheme, AppearanceProvider } from 'react-native-appearance';
+import { Entypo } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
-  NavigationContainer,
-  DefaultTheme,
-  DarkTheme,
-  useTheme,
+  DarkTheme, DefaultTheme, NavigationContainer,
+
+
+  useTheme
 } from '@react-navigation/native';
 import {
   createStackNavigator,
-  TransitionPresets,
+  TransitionPresets
 } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../containers/world/HomeScreen';
-import CountriesList from '../containers/world/CountriesList';
+import React from 'react';
+import { SafeAreaView } from 'react-native';
+import { AppearanceProvider, useColorScheme } from 'react-native-appearance';
+import VisualTheme from '../common/VisualTheme';
+import IndiaScreen from '../containers/india/IndiaScreen';
+import StateDetailedData from '../containers/india/StateDetailedData';
 import StateWiseList from '../containers/india/StateWiseList';
-
+import TimelineSeries from '../containers/india/TimelineSeries';
+import CountriesList from '../containers/world/CountriesList';
+import CountryDetailedData from '../containers/world/CountryDetailedData';
+import HomeScreen from '../containers/world/HomeScreen';
+import { Screens } from './Constants';
 import { DrawerContent } from './DrawerContent';
 import { StackHeader } from './StackHeader';
-import { Screens } from './Constants';
-import IndiaScreen from '../containers/india/IndiaScreen';
-import { Entypo } from '@expo/vector-icons';
-import CountryDetailedData from '../containers/world/CountryDetailedData';
-import StateDetailedData from '../containers/india/StateDetailedData';
-import VisualTheme from '../common/VisualTheme';
+
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -68,6 +69,7 @@ const RootTabNavigator = () => {
     </Tab.Navigator>
   );
 };
+
 /* Stack */
 const WorldStackNavigator = () => {
   const { colors } = useTheme();
@@ -158,6 +160,16 @@ const IndiaStackNavigator = () => {
         options={({ route }) => ({ title: route.params.name })}
         initialParams={themeColor}
       />
+
+      <Stack.Screen
+        name={Screens.TIMELINE_STACK}
+        component={TimelineSeries}
+        options={{
+          headerTitle: 'TimeLine View',
+        }}
+        // options={({ route }) => ({ title: route.params.name })}
+        initialParams={themeColor}
+      />
     </Stack.Navigator>
   );
 };
@@ -203,6 +215,8 @@ const RootNavigator = () => {
     ...DarkTheme,
     colors: {
       ...DarkTheme.colors,
+      background: '#191A1A',
+      card: '#282828',
       text: '#fff',
     },
   };

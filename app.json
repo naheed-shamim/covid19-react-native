@@ -4,7 +4,7 @@
     "slug": "covid-19-india-rn",
     "platforms": [
       "ios",
-      "android",
+      "android"
     ],
     "userInterfaceStyle": "automatic",
     "version": "1.0.0",
@@ -32,6 +32,6 @@
       "package": "com.imageneStudios.covidapp",
       "versionCode": 1
     },
-    "description": "Theme Fixed"
+    "description": "ICONS"
   }
 }

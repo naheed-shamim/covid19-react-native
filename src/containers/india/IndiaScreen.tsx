@@ -1,85 +1,36 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
-import { formatDate } from '../../utils/CommonUtils';
 import { CovidStats } from '../../common/components/CovidStats';
-import { getOverallStatsAndTimeline } from '../../redux/actions/CovidIndiaActions';
-import { CustomLineChart } from '../../common/components/Charts';
-
-import { Screens } from '../../navigation/Constants';
+import { CustomButton } from '../../common/components/CustomButton';
 import { WithTheme } from '../../common/hoc/WithTheme';
+import { Screens } from '../../navigation/Constants';
+import { getOverallStatsAndTimeline } from '../../redux/actions/CovidIndiaActions';
+import { formatDate } from '../../utils/CommonUtils';
 
-class IndiaScreen extends React.Component {
+interface ComponentProps {
+  getOverallStatsAndTimeline: () => void,
+  totalCases: {
+    lastupdatedtime: string, confirmed: string,
+    deltaconfirmed: string,
+    deaths: string,
+    deltadeaths: string,
+    recovered: string,
+    deltarecovered: string
+  },
+  timeLineSeries: Array<any>,
+  themeColors: Object,
+
+}
+class IndiaScreen extends React.Component<ComponentProps, {}> {
   componentDidMount() {
     this.props.getOverallStatsAndTimeline();
   }
 
-  _renderTables = (timeLineSeries) => {
-    const { themeColors } = this.props;
-    let confirmedLabelArray: any[] = [];
-    let confirmedArray: any[] = [];
-    let deathsLabelArray: any[] = [];
-    let deathsArray: any[] = [];
-    let recoveredLabelArray: any[] = [];
-    let recoveredArray: any[] = [];
-    let totalDates = 1;
-    let dateInterval: number = 1;
-
-    if (timeLineSeries.length > 0) {
-      totalDates = timeLineSeries.length;
-      dateInterval = Math.floor(totalDates / 10);
-
-      timeLineSeries.map((item, index) => {
-        confirmedLabelArray.push(item.date);
-        confirmedArray.push(item.dailyconfirmed);
-
-        deathsLabelArray.push(item.date);
-        deathsArray.push(item.dailydeceased);
-
-        recoveredLabelArray.push(item.date);
-        recoveredArray.push(item.dailyrecovered);
-      });
-    }
-    const confirmedDataSet = {
-      xAxisLabels: confirmedLabelArray,
-      yAxisData: confirmedArray,
-    };
-    const deathsDataSet = {
-      xAxisLabels: deathsLabelArray,
-      yAxisData: deathsArray,
-    };
-
-    const recoveredDataSet = {
-      xAxisLabels: recoveredLabelArray,
-      yAxisData: recoveredArray,
-    };
-    return (
-      <View style={styles.tableContainer}>
-        <Text
-          style={{
-            fontSize: 26,
-            fontWeight: 'bold',
-            margin: '2%',
-            color: themeColors.text,
-          }}
-        >
-          {'India Timeline'}
-        </Text>
-        <CustomLineChart
-          cumulative={false}
-          color={'red'}
-          title={'Total Confirmed Cases'}
-          dataSet={[confirmedDataSet, recoveredDataSet, deathsDataSet]}
-        />
-      </View>
-    );
-  };
 
   render() {
     const {
       totalCases: { lastupdatedtime = '' },
-      timeLineSeries = [],
-      route,
       themeColors,
     } = this.props;
 
@@ -112,8 +63,8 @@ class IndiaScreen extends React.Component {
           lastUpdatedTime={lastUpdatedTime}
           onPress={() => this.props.navigation.navigate(Screens.STATE_DATA)}
         />
+        <CustomButton title='Timeline Series' onPress={() => this.props.navigation.navigate(Screens.TIMELINE_STACK)} />
 
-        {this._renderTables(timeLineSeries)}
       </ScrollView>
     );
   }

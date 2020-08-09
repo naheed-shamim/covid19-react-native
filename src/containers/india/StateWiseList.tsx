@@ -1,30 +1,37 @@
 import React from 'react';
-import { FlatList, View, InteractionManager, Text } from 'react-native';
+import {
+  FlatList,
+  InteractionManager,
+  Text,
+  View
+} from 'react-native';
 import { connect } from 'react-redux';
-import { HorizontalRowItem } from '../../common/components/HorizontalRowItem';
-import BaseComponent from '../BaseComponent';
-import { getStateDistrictStats } from '../../redux/actions/CovidIndiaActions';
-import { Searchbar } from 'react-native-paper';
 import {
   FlatListHeader,
-  showLoader,
+  showLoader
 } from '../../common/components/CommonElements';
-import { sortArrayBy } from '../../utils/CommonUtils';
-import { Screens } from '../../navigation/Constants';
+import CommonSort, { SortOptions } from '../../common/components/CommonSort';
+import { HorizontalRowItem } from '../../common/components/HorizontalRowItem';
 import { SearchBar } from '../../common/components/Searchbar';
+import TextPicker from '../../common/components/TextPicker';
 import { WithTheme } from '../../common/hoc/WithTheme';
+import { Screens } from '../../navigation/Constants';
+import { getStateDistrictStats } from '../../redux/actions/CovidIndiaActions';
+import { sortArrayBy } from '../../utils/CommonUtils';
+import BaseComponent from '../BaseComponent';
 
 class StateWiseList extends BaseComponent {
   stateHolder: any;
   constructor(props: any) {
     super(props);
     this.stateHolder = this.props.statewise;
+
   }
   state = {
     didFinishAnimating: false,
     isAscending: false,
     stateList: this.props.statewise,
-    selectedComparator: 'title',
+    selectedComparator: SortOptions.Confirmed,
     searchQuery: '',
   };
 
@@ -34,37 +41,32 @@ class StateWiseList extends BaseComponent {
     });
   }
 
-  _handleSort = (comparatorField: string) => {
+  _handleSort = (comparatorField: string, ascendingSort: boolean = false) => {
     let sortedCountryList = this.state.stateList;
 
-    let ascendingSort = this.state.isAscending;
-    if (this.state.selectedComparator == comparatorField) {
-      ascendingSort = !ascendingSort;
-    }
-
     switch (comparatorField) {
-      case 'title':
+      case SortOptions.Name:
         sortedCountryList = sortArrayBy(
           this.state.stateList,
           'state',
-          !ascendingSort
+          ascendingSort
         );
         break;
-      case 'confirmed':
+      case SortOptions.Confirmed:
         sortedCountryList = sortArrayBy(
           this.state.stateList,
           'confirmed',
           ascendingSort
         );
         break;
-      case 'deaths':
+      case SortOptions.Deaths:
         sortedCountryList = sortArrayBy(
           this.state.stateList,
           'deaths',
           ascendingSort
         );
         break;
-      case 'recovered':
+      case SortOptions.Recovered:
         sortedCountryList = sortArrayBy(
           this.state.stateList,
           'recovered',
@@ -104,6 +106,75 @@ class StateWiseList extends BaseComponent {
     this.setState({ stateList: newData });
   };
 
+  _renderSortView = () => {
+    return (
+      <CommonSort
+        themeColors={this.props.themeColors}
+        defaultValue={this.state.selectedComparator}
+        isAscending={this.state.isAscending}
+        handleSortSelection={selection =>
+          this._handleSortSelection(selection)
+        }
+        onComparatorSelection={selection => {
+          this.setState({ isAscending: selection }),
+            this._handleSort(this.state.selectedComparator, selection)
+        }}
+      />
+    );
+  };
+
+  _handleSortSelection = (comparatorField) => {
+    let sortedCountryList = this.state.stateList;
+
+    let ascendingSort = this.isAscending;
+    if (this.state.selectedComparator == comparatorField) {
+      ascendingSort = !ascendingSort;
+    }
+
+    switch (comparatorField) {
+      case SortOptions.Name:
+        sortedCountryList = sortArrayBy(
+          this.state.stateList,
+          'state',
+          !ascendingSort
+        );
+        break;
+      case SortOptions.Confirmed:
+        sortedCountryList = sortArrayBy(
+          this.state.stateList,
+          'confirmed',
+          ascendingSort
+        );
+        break;
+      case SortOptions.Deaths:
+        sortedCountryList = sortArrayBy(
+          this.state.stateList,
+          'deaths',
+          ascendingSort
+        );
+        break;
+      case SortOptions.Recovered:
+        sortedCountryList = sortArrayBy(
+          this.state.stateList,
+          'recovered',
+          ascendingSort
+        );
+        break;
+      default:
+        sortedCountryList = sortArrayBy(
+          this.state.stateList,
+          'state',
+          ascendingSort
+        );
+    }
+    this.setState({
+      stateList: sortedCountryList,
+      selectedComparator: comparatorField,
+      isAscending: true,
+    });
+    this.stateHolder = sortedCountryList;
+  };
+
   _renderFlatList = () => {
     const { stateDistrictWiseData = {}, route, themeColors } = this.props;
     const { stateList = [] } = this.state;
@@ -114,18 +185,15 @@ class StateWiseList extends BaseComponent {
         onPress={(comparator: string) => this._handleSort(comparator)}
       />
     );
+
     return (
       <View style={{ flex: 1, backgroundColor: themeColors.background }}>
         {this._showSearchBar()}
-        {/* {showHeaders} */}
+        {this._renderSortView()}
         <FlatList
-          ListHeaderComponent={showHeaders}
+          // ListHeaderComponent={showHeaders}
           data={stateList}
           renderItem={({ item, index }) => (
-            // <CollapsibleRowItem
-            //   overallStateData={item}
-            //   districtDetails={stateDistrictWiseData[item.state]}
-            // />
             <HorizontalRowItem
               serialNum={index + 1}
               overallData={item}
@@ -191,12 +259,23 @@ class StateWiseList extends BaseComponent {
 
   render() {
     const { didFinishAnimating } = this.state;
+    const options = ['Sort by cc', 'ccasds'];
 
     const view = didFinishAnimating
       ? this._renderFlatList()
       : this._showLoader(didFinishAnimating);
 
-    return <View style={{ flex: 1, backgroundColor: 'white' }}>{view}</View>;
+    return (
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <TextPicker
+          ref={'picker'}
+          shouldOverlayDismiss={false}
+          options={options}
+          onSubmit={(value) => this._handleSortSelection(value)}
+        />
+        {view}
+      </View>
+    );
   }
 }
 
