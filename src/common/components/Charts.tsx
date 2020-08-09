@@ -1,25 +1,19 @@
+import { useTheme } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  Switch,
-  TouchableOpacity,
-} from 'react-native';
-import { Card } from 'react-native-paper';
+  Dimensions, StyleSheet,
 
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
-} from 'react-native-chart-kit';
-import { BackgroundColoredButton } from './BackgroundColoredButton';
-import { useTheme } from '@react-navigation/native';
+  Switch, Text,
+
+
+
+  TouchableOpacity, View
+} from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
+import { Card } from 'react-native-paper';
 import { toCommas } from '../../utils/CommonUtils';
+import { BackgroundColoredButton } from './BackgroundColoredButton';
+
 
 enum TYPE {
   FORTNIGHT = 0,
@@ -76,6 +70,13 @@ export const CustomLineChart = (props: Props) => {
   };
 
   const renderTabHeader = (caseType: CASE_TYPE) => {
+
+    let borderColor = 'red';
+    if (caseType == CASE_TYPE.DEATH)
+      borderColor = 'grey';
+    else if (caseType == CASE_TYPE.RECOVERED)
+      borderColor = 'green'
+
     const tabHeaderStyle = [
       styles.tabHeaderStyle,
       { backgroundColor: colors.card },
@@ -84,7 +85,7 @@ export const CustomLineChart = (props: Props) => {
       ...styles.tabHeaderStyle,
       backgroundColor: colors.card,
       borderBottomWidth: 2,
-      borderColor: 'red',
+      borderColor: borderColor,
     };
     const tabStyle =
       chartCaseType == caseType ? highlightedTabStyle : tabHeaderStyle;
@@ -204,18 +205,18 @@ export const CustomLineChart = (props: Props) => {
           }}
         />
         <BackgroundColoredButton
-          title={'Last 14 Days'}
-          selected={chartSpan === TYPE.FORTNIGHT}
-          onPress={() => {
-            setChartSpan(TYPE.FORTNIGHT);
-            setDaySelected('');
-          }}
-        />
-        <BackgroundColoredButton
           title={'Last Month'}
           selected={chartSpan === TYPE.MONTH}
           onPress={() => {
             setChartSpan(TYPE.MONTH);
+            setDaySelected('');
+          }}
+        />
+        <BackgroundColoredButton
+          title={'Last 14 Days'}
+          selected={chartSpan === TYPE.FORTNIGHT}
+          onPress={() => {
+            setChartSpan(TYPE.FORTNIGHT);
             setDaySelected('');
           }}
         />

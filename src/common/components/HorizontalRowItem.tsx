@@ -1,17 +1,15 @@
+import { AntDesign } from '@expo/vector-icons';
+import { useTheme } from '@react-navigation/native';
 import React from 'react';
 import {
-  TouchableWithoutFeedback,
-  Text,
-  View,
   Image,
-  Animated,
-  StyleSheet,
-  Easing,
+
+  StyleSheet, Text, TouchableWithoutFeedback,
+
+  View
 } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { Card } from 'react-native-paper';
 import { toCommas } from '../../utils/CommonUtils';
-import { Card, Divider } from 'react-native-paper';
-import { useTheme } from '@react-navigation/native';
 import { CountryFlag } from './Common';
 
 const expandIcon = require('../../../assets/expand-more.png');
@@ -119,7 +117,7 @@ const ConsolidatedCaseView = React.memo((props: ConsolidateCaseViewProps) => {
 
   return (
     <View style={styles.stateNumberContainer}>
-      <Text numberOfLines={2} style={{ textAlign: 'center' }}>{label}</Text>
+      <Text numberOfLines={2} style={{ textAlign: 'center', color: colors.text }}>{label}</Text>
       {showNewCases && (
         <NewCasesView newCases={newCases} deltaColor={deltaColor} />
       )}

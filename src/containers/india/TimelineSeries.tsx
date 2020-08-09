@@ -1,13 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux';
-
-import WithLoadingSpinner from '../../common/hoc/WithLoadingSpinner';
 import { CustomLineChart } from '../../common/components/Charts';
-import LoadingSpinner from '../../common/components/LoadingSpinner';
+import { WithTheme } from '../../common/hoc/WithTheme';
 import { getOverallStatsAndTimeline } from '../../redux/actions/CovidIndiaActions';
 import BaseComponent from '../BaseComponent';
-import { getWorldSummary } from '../../redux/actions/CovidWorldActions';
+
 
 class TimelineSeries extends BaseComponent {
   constructor(props) {
@@ -16,10 +14,11 @@ class TimelineSeries extends BaseComponent {
 
   componentDidMount() {
     this.props.getOverallStatsAndTimeline();
-    this.props.getWorldSummary();
+
   }
 
   _renderTables = (timeLineSeries) => {
+    const { themeColors } = this.props;
     let confirmedLabelArray: any[] = [];
     let confirmedArray: any[] = [];
     let deathsLabelArray: any[] = [];
@@ -34,7 +33,6 @@ class TimelineSeries extends BaseComponent {
       dateInterval = Math.floor(totalDates / 10);
 
       timeLineSeries.map((item, index) => {
-        // index % dateInterval == 0 &&
         confirmedLabelArray.push(item.date);
         confirmedArray.push(item.dailyconfirmed);
 
@@ -59,34 +57,34 @@ class TimelineSeries extends BaseComponent {
       yAxisData: recoveredArray,
     };
     return (
-      <ScrollView>
-        <View style={styles.container}>
-          <CustomLineChart
-            cumulative={false}
-            color={'red'}
-            title={'Total Confirmed Cases'}
-            dataSet={[confirmedDataSet, recoveredDataSet, deathsDataSet]}
-            // onDataSelected={(x, y) => console.log(x, y)
-            // }
-          />
-        </View>
-      </ScrollView>
+      <View style={styles.tableContainer}>
+        <Text
+          style={{
+            fontSize: 26,
+            fontWeight: 'bold',
+            margin: '2%',
+            color: themeColors.text,
+          }}
+        >
+          {'India Timeline'}
+        </Text>
+        <CustomLineChart
+          cumulative={false}
+          color={'red'}
+          title={'Total Confirmed Cases'}
+          dataSet={[confirmedDataSet, recoveredDataSet, deathsDataSet]}
+        />
+      </View>
     );
   };
 
-  _renderLoader = (loading) => {
-    return <LoadingSpinner isVisible={loading} />;
-  };
-
   render() {
-    const { loading, timeLineSeries = [], global } = this.props;
-    !!global && console.log(global);
+    const { timeLineSeries = [], } = this.props;
 
-    const renderView = loading
-      ? this._renderLoader(loading)
-      : this._renderTables(timeLineSeries);
 
-    return <View style={{ flex: 1 }}>{renderView}</View>;
+    const renderView = this._renderTables(timeLineSeries);
+
+    return <ScrollView style={{ flex: 1 }}>{renderView}</ScrollView>;
   }
 }
 
@@ -108,19 +106,22 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     borderWidth: 1,
   },
+  tableContainer: {
+    padding: '1%',
+  },
 });
 
 const mapStateToProps = (state: any) => {
   return {
     loading: state.covidIndia.loading,
     timeLineSeries: state.covidIndia.timeLineSeries,
-    global: state.covidWorld.global,
   };
 };
 const mapDispatchToProps = {
   getOverallStatsAndTimeline,
-  getWorldSummary,
 };
-export default WithLoadingSpinner()(
-  connect(mapStateToProps, mapDispatchToProps)(TimelineSeries)
-);
+
+const withThemedComponent = WithTheme(TimelineSeries);
+
+export default connect(mapStateToProps, mapDispatchToProps)(withThemedComponent);
+

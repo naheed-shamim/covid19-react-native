@@ -3,15 +3,14 @@ import {
   FlatList,
   InteractionManager,
   Text,
-  View,
-  Image,
-  TouchableOpacity,
+  View
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
   FlatListHeader,
-  showLoader,
+  showLoader
 } from '../../common/components/CommonElements';
+import CommonSort, { SortOptions } from '../../common/components/CommonSort';
 import { HorizontalRowItem } from '../../common/components/HorizontalRowItem';
 import { SearchBar } from '../../common/components/Searchbar';
 import TextPicker from '../../common/components/TextPicker';
@@ -20,20 +19,19 @@ import { Screens } from '../../navigation/Constants';
 import { getStateDistrictStats } from '../../redux/actions/CovidIndiaActions';
 import { sortArrayBy } from '../../utils/CommonUtils';
 import BaseComponent from '../BaseComponent';
-import { icons } from '../../constants/Constants';
-import CommonSort, { SortOptions } from '../../common/components/CommonSort';
 
 class StateWiseList extends BaseComponent {
   stateHolder: any;
   constructor(props: any) {
     super(props);
     this.stateHolder = this.props.statewise;
+
   }
   state = {
     didFinishAnimating: false,
     isAscending: false,
     stateList: this.props.statewise,
-    selectedComparator: 'title',
+    selectedComparator: SortOptions.Confirmed,
     searchQuery: '',
   };
 
@@ -43,37 +41,32 @@ class StateWiseList extends BaseComponent {
     });
   }
 
-  _handleSort = (comparatorField: string) => {
+  _handleSort = (comparatorField: string, ascendingSort: boolean = false) => {
     let sortedCountryList = this.state.stateList;
 
-    let ascendingSort = this.state.isAscending;
-    if (this.state.selectedComparator == comparatorField) {
-      ascendingSort = !ascendingSort;
-    }
-
     switch (comparatorField) {
-      case 'title':
+      case SortOptions.Name:
         sortedCountryList = sortArrayBy(
           this.state.stateList,
           'state',
-          !ascendingSort
+          ascendingSort
         );
         break;
-      case 'confirmed':
+      case SortOptions.Confirmed:
         sortedCountryList = sortArrayBy(
           this.state.stateList,
           'confirmed',
           ascendingSort
         );
         break;
-      case 'deaths':
+      case SortOptions.Deaths:
         sortedCountryList = sortArrayBy(
           this.state.stateList,
           'deaths',
           ascendingSort
         );
         break;
-      case 'recovered':
+      case SortOptions.Recovered:
         sortedCountryList = sortArrayBy(
           this.state.stateList,
           'recovered',
@@ -116,9 +109,16 @@ class StateWiseList extends BaseComponent {
   _renderSortView = () => {
     return (
       <CommonSort
-        handleSortSelection={(selection) =>
+        themeColors={this.props.themeColors}
+        defaultValue={this.state.selectedComparator}
+        isAscending={this.state.isAscending}
+        handleSortSelection={selection =>
           this._handleSortSelection(selection)
         }
+        onComparatorSelection={selection => {
+          this.setState({ isAscending: selection }),
+            this._handleSort(this.state.selectedComparator, selection)
+        }}
       />
     );
   };
@@ -126,7 +126,7 @@ class StateWiseList extends BaseComponent {
   _handleSortSelection = (comparatorField) => {
     let sortedCountryList = this.state.stateList;
 
-    let ascendingSort = false;
+    let ascendingSort = this.isAscending;
     if (this.state.selectedComparator == comparatorField) {
       ascendingSort = !ascendingSort;
     }
