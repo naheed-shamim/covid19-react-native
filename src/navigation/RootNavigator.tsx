@@ -96,7 +96,7 @@ const WorldStackNavigator = () => {
         name={Screens.HOME}
         component={HomeScreen}
         options={{
-          title: 'COVID-19 Tracker',
+          title: 'COVID-19 Global Tracker',
         }}
         initialParams={themeColor}
       />
@@ -104,7 +104,7 @@ const WorldStackNavigator = () => {
         name={Screens.COUNTRY_DATA}
         component={CountriesList}
         options={{
-          title: 'Country Data',
+          title: 'Global Stats',
         }}
         initialParams={themeColor}
       />
@@ -150,7 +150,7 @@ const IndiaStackNavigator = () => {
         name={Screens.STATE_DATA}
         component={StateWiseList}
         options={{
-          title: 'States',
+          title: 'India Stats',
         }}
         initialParams={themeColor}
       />
@@ -165,7 +165,7 @@ const IndiaStackNavigator = () => {
         name={Screens.TIMELINE_STACK}
         component={TimelineSeries}
         options={{
-          headerTitle: 'TimeLine View',
+          headerTitle: 'India Timeline View',
         }}
         // options={({ route }) => ({ title: route.params.name })}
         initialParams={themeColor}

@@ -16,14 +16,14 @@ export const SearchBar = (props: SearchBarProps) => {
         borderRadius: 5,
         borderWidth: 1,
         padding: 1,
-        margin: 10,
+        marginTop: 20,
+        marginHorizontal: '3%',
         backgroundColor: colors.card,
         borderColor: colors.card,
       }}
     >
       <TextInput
         style={{
-          // backgroundColor: 'white',
           padding: 10,
           fontSize: 14,
           color: colors.text,

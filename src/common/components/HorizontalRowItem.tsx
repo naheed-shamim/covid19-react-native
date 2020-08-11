@@ -9,7 +9,7 @@ import {
   View
 } from 'react-native';
 import { Card } from 'react-native-paper';
-import { toCommas } from '../../utils/CommonUtils';
+import { toCommas, getRandomColor } from '../../utils/CommonUtils';
 import { CountryFlag } from './Common';
 
 const expandIcon = require('../../../assets/expand-more.png');
@@ -39,14 +39,17 @@ export const HorizontalRowItem = React.memo((props: Props) => {
     confirmed,
     deltaconfirmed,
     state,
+    statecode = null,
     countryOrStateCode = null,
   } = overallData;
 
   const { colors } = useTheme();
 
+  const randomColors = getRandomColor()
+
   const flagImage = countryOrStateCode
     ? <CountryFlag countryCode={countryOrStateCode} />
-    : null;
+    : <Text style={{ textAlign: 'center', backgroundColor: randomColors, width: 80, height: 50, paddingVertical: '4%', color: '#fff', fontWeight: 'bold' }}>{statecode}</Text>;
 
   const showSerialNum = () => {
     if (!!serialNum) {
@@ -54,7 +57,7 @@ export const HorizontalRowItem = React.memo((props: Props) => {
         <Text
           style={[
             styles.stateNameTxt,
-            { flex: 0, paddingHorizontal: '1%', color: colors.text, fontSize: 12 },
+            { flex: 0, paddingHorizontal: '1%', color: colors.text, fontSize: 12, width: 30 },
           ]}
         >
           {serialNum}.

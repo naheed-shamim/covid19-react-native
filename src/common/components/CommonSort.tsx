@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, ReactNode } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { icons } from '../../constants/Constants';
 import TextPicker from './TextPicker';
@@ -15,6 +15,7 @@ interface CommonSortProps {
   isAscending: boolean,
   handleSortSelection: (selection: string) => void;
   onComparatorSelection: (selection: boolean) => void
+  themeColors: ReactNode
 }
 
 export default class CommonSort extends PureComponent<CommonSortProps, {}> {
@@ -31,7 +32,7 @@ export default class CommonSort extends PureComponent<CommonSortProps, {}> {
 
     const compartorText = isAscending ? 'ASC' : 'DSC';
     return (
-      <View>
+      <View style={{ marginTop: 10, marginBottom: 5, marginHorizontal: '3%' }}>
         <TextPicker
           ref={'picker'}
           defaultStatus={this.props.defaultValue}

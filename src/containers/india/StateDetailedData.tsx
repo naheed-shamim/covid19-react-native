@@ -52,7 +52,7 @@ class StateDetailedData extends React.Component {
       (state.confirmed / total.confirmed) * 100
     ).toFixed(2);
 
-    const labelStyle = [styles.labelStyle, { color: themeColors.text }];
+    const labelStyle = [styles.labelStyle, { color: themeColors.text, }];
 
     return (
       <Card style={{ margin: '2%', backgroundColor: themeColors.card }}>
@@ -91,7 +91,6 @@ class StateDetailedData extends React.Component {
     const { districtData } = district;
     return (
       <View style={{ margin: '1%' }}>
-        <Text>District Data</Text>
         <View style={{ flex: 1, flexDirection: 'row' }}>
           <Text style={[styles.districtText, { color: themeColors.text }]}>
             District
@@ -165,11 +164,13 @@ const styles = StyleSheet.create({
   districtText: {
     fontSize: 14,
     marginLeft: '5%',
+    fontWeight: 'bold',
     flex: 2,
     color: Colors.black,
   },
   districtConfirmedTxt: {
     flex: 1,
+    fontWeight: 'bold',
     color: Colors.black,
     textAlign: 'center',
   },

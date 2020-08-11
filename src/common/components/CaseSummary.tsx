@@ -49,6 +49,7 @@ export const CaseSummary = (props: CaseSummaryProps) => {
           <Text style={[styles.stats, { color: colors.text }]}>
             {toCommas(confirmed)}
           </Text>
+          <Divider />
           <Text style={[styles.label, { color: colors.text }]}>Confirmed</Text>
         </View>
         <View style={cardContainerStyle}>
@@ -61,6 +62,7 @@ export const CaseSummary = (props: CaseSummaryProps) => {
           <Text style={[styles.stats, { color: colors.text }]}>
             {toCommas(active)}
           </Text>
+          <Divider />
           <Text style={[styles.label, { color: colors.text }]}>Active</Text>
         </View>
       </View>
@@ -77,6 +79,7 @@ export const CaseSummary = (props: CaseSummaryProps) => {
           <Text style={[styles.stats, { color: colors.text }]}>
             {toCommas(recovered)}
           </Text>
+          <Divider />
           <Text style={[styles.label, { color: colors.text }]}>Recovered</Text>
         </View>
         <View style={cardContainerStyle}>
@@ -87,12 +90,15 @@ export const CaseSummary = (props: CaseSummaryProps) => {
           <Text style={[styles.stats, { color: colors.text }]}>
             {toCommas(deaths)}
           </Text>
+          <Divider />
           <Text style={[styles.label, { color: colors.text }]}>Deaths</Text>
         </View>
       </View>
     </View>
   );
 };
+
+const Divider = (props: any) => (<View style={{ backgroundColor: '#cdcd', height: 1, margin: 6, width: '100%' }} />)
 
 const styles = StyleSheet.create({
   caseContainer: {
