@@ -6,7 +6,6 @@
       "ios",
       "android"
     ],
-    "resolutions": { "logkitty": "^0.7.1" },
     "userInterfaceStyle": "automatic",
     "version": "1.0.0",
     "orientation": "portrait",
