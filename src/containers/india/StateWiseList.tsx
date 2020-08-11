@@ -6,10 +6,7 @@ import {
   View
 } from 'react-native';
 import { connect } from 'react-redux';
-import {
-  FlatListHeader,
-  showLoader
-} from '../../common/components/CommonElements';
+import { showLoader } from '../../common/components/CommonElements';
 import CommonSort, { SortOptions } from '../../common/components/CommonSort';
 import { HorizontalRowItem } from '../../common/components/HorizontalRowItem';
 import { SearchBar } from '../../common/components/Searchbar';
@@ -178,13 +175,6 @@ class StateWiseList extends BaseComponent {
   _renderFlatList = () => {
     const { stateDistrictWiseData = {}, route, themeColors } = this.props;
     const { stateList = [] } = this.state;
-
-    const showHeaders = (
-      <FlatListHeader
-        title={'STATE'}
-        onPress={(comparator: string) => this._handleSort(comparator)}
-      />
-    );
 
     return (
       <View style={{ flex: 1, backgroundColor: themeColors.background }}>

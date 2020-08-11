@@ -49,7 +49,7 @@ const TotalAndNewCase = (props) => {
     <View style={{ alignItems: 'center' }}>
       <View style={{ flexDirection: 'row' }}>
         <AntDesign name='arrowup' size={14} color={color} />
-        <Text style={{ color: color }}>{toCommas(newCases)}</Text>
+        <Text style={{ color: color, fontSize: 12 }}>{toCommas(newCases)}</Text>
       </View>
       <Text style={[styles.statsValueStyle, { color: color }]}>
         {toCommas(totalCases)}
@@ -59,7 +59,7 @@ const TotalAndNewCase = (props) => {
 };
 
 const styles = StyleSheet.create({
-  statsValueStyle: { fontSize: 25, fontWeight: '600' },
+  statsValueStyle: { fontSize: 20, fontWeight: '600' },
 });
 export const MemoizedTotalAndNewCases = React.memo(TotalAndNewCase);
 
