@@ -19,6 +19,8 @@
 
 ## Screenshots
 
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DashboardGlobal.png" width="40%">
+
 ![Global Dashboard](https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DashboardGlobal.png | width=100 )
 
 ![Global India](https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DashboardIndia.png?raw=true)
