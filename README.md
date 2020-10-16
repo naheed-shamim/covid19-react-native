@@ -19,23 +19,23 @@
 
 ## Screenshots
 
-<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DashboardGlobal.png" width="10%">
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DashboardGlobal.png" width="20%">
 
-<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DashboardIndia.png" width="10%">
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DashboardIndia.png" width="20%">
 
-<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/ChartDeathsTotal.png" width="10%">
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/ChartDeathsTotal.png" width="20%">
 
-<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/ChartRecovered.png" width="10%">
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/ChartRecovered.png" width="20%">
 
-<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/TimeLine.png" width="10%">
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/TimeLine.png" width="20%">
 
-<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/CountryDetail.png" width="10%">
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/CountryDetail.png" width="20%">
 
-<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/CountryList.png" width="10%">
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/CountryList.png" width="20%">
 
-<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DarkModeSearch.png" width="10%">
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DarkModeSearch.png" width="20%">
 
-<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/IndiaList.png" width="10%">
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/IndiaList.png" width="20%">
 
 
 
