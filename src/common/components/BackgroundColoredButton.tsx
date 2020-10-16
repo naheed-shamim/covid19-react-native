@@ -13,13 +13,13 @@ interface ButtonProps {
 const BackgroundColoredButton: React.FunctionComponent<ButtonProps> = (
   props
 ) => {
-  const { title, onPress, bgColor, txtColor = 'red', selected } = props;
+  const { title, onPress, bgColor = '#000', txtColor = 'black', selected } = props;
 
   return (
     <TouchableOpacity
       style={[
         styles.container,
-        { backgroundColor: selected ? bgColor : 'yellow' },
+        { borderColor: selected ? bgColor : '#eee', },
       ]}
       onPress={onPress}
     >
@@ -31,10 +31,13 @@ const BackgroundColoredButton: React.FunctionComponent<ButtonProps> = (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'yellow',
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 10,
+    borderColor: '#000',
+    borderWidth: 1,
+    borderRadius: 2
   },
 });
 
