@@ -19,25 +19,23 @@
 
 ## Screenshots
 
-<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DashboardGlobal.png" width="40%">
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DashboardGlobal.png" width="10%">
 
-![Global Dashboard](https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DashboardGlobal.png | width=100 )
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DashboardIndia.png" width="10%">
 
-![Global India](https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DashboardIndia.png?raw=true)
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/ChartDeathsTotal.png" width="10%">
 
-![Chart Total Deaths](https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/ChartDeathsTotal.png?raw=true)
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/ChartRecovered.png" width="10%">
 
-![Chart Total Recoverd](https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/ChartRecovered.png?raw=true)
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/TimeLine.png" width="10%">
 
-![Chart Confirmed Timeline](https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/TimeLine.png?raw=true)
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/CountryDetail.png" width="10%">
 
-![Country Detailed](https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/CountryDetail.png?raw=true)
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/CountryList.png" width="10%">
 
-![Country List](https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/CountryList.png?raw=true)
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DarkModeSearch.png" width="10%">
 
-![Dark Mode](https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DarkModeSearch.png?raw=true)
-
-![India State List](https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/IndiaList.png?raw=true)
+<img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/IndiaList.png" width="10%">
 
 
 
