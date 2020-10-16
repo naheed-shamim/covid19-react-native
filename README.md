@@ -16,8 +16,7 @@
 - Used API: https://api.covid19india.org/ for India
 - API: https://api.covid19api.com for Global Stats
 
-### Find the Expo Link Here: 
-[Link to Expo](https://expo.io/@naheed/projects/covid-19-india-rn)
+### Find the Expo Link Here: [Link to Expo](https://expo.io/@naheed/projects/covid-19-india-rn)
 
 
 
