@@ -12,6 +12,7 @@
 
 ### Technically
 - Redux Saga
+- TypeScript
 - Used API: https://api.covid19india.org/ for India
 - API: https://api.covid19api.com for Global Stats
 
@@ -19,9 +20,16 @@
 
 ## Screenshots
 
+<div class="row">
+  <div class="column">
+
 <img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DashboardGlobal.png" width="20%">
 
 <img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DashboardIndia.png" width="20%">
+
+</div>
+
+<div class="column">
 
 <img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/ChartDeathsTotal.png" width="20%">
 
@@ -29,13 +37,23 @@
 
 <img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/TimeLine.png" width="20%">
 
+</div>
+
+<div class="column">
+
 <img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/CountryDetail.png" width="20%">
 
 <img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/CountryList.png" width="20%">
 
+</div>
+
+<div class="column">
+
 <img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/DarkModeSearch.png" width="20%">
 
 <img src="https://github.com/naheed-shamim/covid19-react-native/blob/master/screenshots/IndiaList.png" width="20%">
+
+</div>
 
 
 
