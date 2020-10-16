@@ -182,7 +182,7 @@ const RootDrawerNavigator = (props) => {
       initialRouteName={Screens.HOME_STACK}
       drawerStyle={{
         backgroundColor: 'white',
-        width: 240,
+        width: 0, // TODO: Update the Drawer Navigator
       }}
       screenOptions={{
         ...TransitionPresets.ScaleFromCenterAndroid,
