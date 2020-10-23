@@ -8,6 +8,7 @@
 - India specific Stats
 - India District Wise Stats
 - Comparative Stats as per Countries and States
+- Search Indian States or Countries
 
 
 ### Technically
