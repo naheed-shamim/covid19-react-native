@@ -32,6 +32,7 @@
       "package": "com.imageneStudios.covidapp",
       "versionCode": 1
     },
-    "description": "Covid 19 React NAtive"
+    "description": "Covid 19 React NAtive",
+    "entryPoint": "node_modules/expo/AppEntry.js"
   }
 }
